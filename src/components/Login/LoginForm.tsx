@@ -28,7 +28,7 @@ const LoginForm = () => {
         >
           <Input
             size="large"
-            prefix={<LuUser2 className="fill-primary" />}
+            prefix={<LuUser2 className="text-primary" />}
             placeholder="Email"
             
           />
@@ -49,7 +49,7 @@ const LoginForm = () => {
         >
           <Input.Password
             size="large"
-            prefix={<IoLockClosedOutline className="fill-primary" />}
+            prefix={<IoLockClosedOutline className="text-primary" />}
             placeholder="Password"
           />
         </Form.Item>
