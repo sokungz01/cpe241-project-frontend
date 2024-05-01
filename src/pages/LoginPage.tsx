@@ -3,7 +3,7 @@ const LoginPage = () => {
   return (
   <>
   <div className="relative flex h-screen items-center justify-center bg-[url(/bg.png)] object-contain">
-      <div className="w-1/4 flex flex-col items-center">
+      <div className="w-1/2 lg:w-1/3 xl:w-1/4 flex flex-col items-center">
         <div className="flex flex-row items-end">
           <img src="/logo.png" alt="logo" className="size-8" />
           <h4 className="text-2xl mx-2">Sorn Rub Som</h4>
