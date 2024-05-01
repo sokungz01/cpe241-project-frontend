@@ -9,7 +9,7 @@ export default {
         normal: "#3490CB",
         primary: "#1890FF",
         bg: "#E6F1F9",
-        blue_header: "#0B2437",
+        blue_header: "#003150",
       },
     },
   },
