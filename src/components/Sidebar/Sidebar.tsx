@@ -1,13 +1,18 @@
 import React from "react";
+import { useState } from "react";
 import {
   FormOutlined,
   TableOutlined,
   ProfileOutlined,
   SettingOutlined,
   DashboardOutlined,
+  MenuUnfoldOutlined,
+  MenuFoldOutlined,
 } from "@ant-design/icons";
+import { Layout, Menu } from "antd";
 import type { MenuProps } from "antd";
-import { Menu } from "antd";
+
+const { Sider } = Layout;
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -46,22 +51,39 @@ const items: MenuItem[] = [
 ];
 
 const Sidebar: React.FC = () => {
-  const onClick: MenuProps["onClick"] = (e) => {
-    console.log("click ", e);
-  };
+  const [collapsed, setCollapsed] = useState(true);
 
   return (
-    <div className=" shadow-lg">
-      <Menu
-        onClick={onClick}
-        style={{ width: 256 }}
-        defaultSelectedKeys={["1"]}
-        defaultOpenKeys={[]}
-        mode="inline"
-        items={items}
-        className="flex flex-col h-screen py-1"
-      />
-    </div>
+    <>
+      <Layout className="shadow-md overflow-hidden">
+        <Sider
+          collapsible
+          collapsed={collapsed}
+          onCollapse={(value: any) => setCollapsed(value)}
+          className=""
+          trigger={null}
+          theme="light"
+          width={250}
+          breakpoint="lg"
+        >
+          <button
+            className={`text-center w-full py-2 hover:bg-[#eee] border-r border-[#f0f0f0]`}
+            onClick={() => {
+              setCollapsed(!collapsed);
+            }}
+          >
+            {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+          </button>
+          <Menu
+            theme="light"
+            defaultSelectedKeys={["1"]}
+            mode="inline"
+            items={items}
+            className="h-screen flex flex-col"
+          />
+        </Sider>
+      </Layout>
+    </>
   );
 };
 
