@@ -1,17 +1,39 @@
+import { Login } from "@/api/authen.api";
+import { SwalError, SwalSuccess } from "@/utils/swal";
 import { Form, Input } from "antd";
+import { useState } from "react";
 import { IoLockClosedOutline } from "react-icons/io5";
 import { LuUser2 } from "react-icons/lu";
+import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
   const [form] = Form.useForm();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const navigate = useNavigate()
+  const onFinish = async () => {
+    try {
+      setIsLoading(true);
+      const values = await form.validateFields();
+      const response = await Login(values.email, values.password);
+      if (response.status !== 200) {
+        throw new Error("Failed to login");
+      }
+      const token: string = response.data.token;
+      localStorage.setItem("accessToken", token);
+      SwalSuccess("เข้าสู่ระบบสำเร็จ", "กำลังเปลี่ยนเส้นทาง").then(()=>{
+        navigate('/')
+      })
+      setIsLoading(false);
+    } catch (err) {
+      SwalError("เข้าสู่ระบบไม่สำเร็จ", "กรุณาลองใหม่ภายหลัง");
+      setIsLoading(false);
+      throw new Error("Failed : cannot login." + err);
+    }
+  };
+
   return (
     <div className="w-full">
-      <Form
-        form={form}
-        name="login"
-        // onFinish={onFinish}
-        scrollToFirstError
-      >
+      <Form form={form} name="login" onFinish={onFinish} scrollToFirstError>
         <Form.Item
           name="email"
           hasFeedback
@@ -27,14 +49,14 @@ const LoginForm = () => {
           ]}
         >
           <Input
+            name="email"
             size="large"
             prefix={<LuUser2 className="text-primary" />}
             placeholder="Email"
-            
           />
         </Form.Item>
         <Form.Item
-          name="passowrd"
+          name="password"
           hasFeedback
           rules={[
             {
@@ -57,7 +79,8 @@ const LoginForm = () => {
         <div className="flex flex-row justify-center">
           <button
             type="submit"
-            className="bg-normal text-white px-6 py-2 rounded-sm text-lg"
+            disabled={isLoading}
+            className="bg-normal text-white px-6 py-2 rounded-sm text-lg disabled:bg-normal/60"
           >
             Sign in
           </button>

@@ -3,6 +3,7 @@ import { HomePage, NotFoundPage } from "@/pages";
 import LoginPage from "./pages/LoginPage";
 import { ConfigProvider } from "antd";
 import { theme } from "./config/antdTheme";
+import ProtectedLogin from "./components/Protected/ProtectedLogin";
 
 function App() {
   return (
@@ -10,7 +11,14 @@ function App() {
       <ConfigProvider theme={theme}>
         <BrowserRouter basename="/">
           <Routes>
-            <Route path="/" element={<HomePage />} />
+            <Route
+              path="/"
+              element={
+                <ProtectedLogin>
+                  <HomePage />
+                </ProtectedLogin>
+              }
+            />
             <Route path="/login" element={<LoginPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
