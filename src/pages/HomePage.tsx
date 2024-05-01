@@ -1,13 +1,19 @@
-import Navbar from "@/components/Login/Navbar";
+import Navbar from "@/components/Navbar/Navbar";
+import Sidebar from "@/components/Sidebar/Sidebar";
 
 const HomePage = () => {
   return (
-    <div className="flex flex-col h-screen">
+    <>
       <Navbar />
-      <div className="m-auto">
-        <p className="text-xl font-bold">Home</p>
+      <div className="flex flex-row">
+        <div className="">
+          <Sidebar />
+        </div>
+        <div className="w-full flex justify-center items-center">
+          <p className="text-xl font-bold">Home</p>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
