@@ -11,6 +11,7 @@ import {
 } from "@ant-design/icons";
 import { Layout, Menu } from "antd";
 import type { MenuProps } from "antd";
+import { Link } from "react-router-dom";
 
 const { Sider } = Layout;
 
@@ -20,17 +21,17 @@ const items: MenuItem[] = [
   {
     key: "1",
     icon: <ProfileOutlined />,
-    label: "ข้อมูลพนักงาน",
+    label: <Link to="/employeeInfo">ข้อมูลพนักงาน</Link>,
   },
   {
     key: "2",
     icon: <FormOutlined />,
-    label: "รายงานแจ้งซ่อม",
+    label: <Link to="/fixReport">รายงานแจ้งซ่อม</Link>,
   },
   {
     key: "3",
     icon: <TableOutlined />,
-    label: "ข้อมูลเครื่องจักร",
+    label: <Link to="/machineInfo">ข้อมูลเครื่องจักร</Link>,
   },
   {
     key: "4",
@@ -39,14 +40,14 @@ const items: MenuItem[] = [
     children: [
       {
         key: "4-1",
-        label: "ประวัติคลังสินค้า",
+        label: <Link to="/stockHistory">ประวัติคลังสินค้า</Link>,
       },
     ],
   },
   {
     key: "5",
     icon: <DashboardOutlined />,
-    label: "Dashboard",
+    label: <Link to="/dashboard">Dashboard</Link>,
   },
 ];
 
@@ -76,7 +77,7 @@ const Sidebar: React.FC = () => {
           </button>
           <Menu
             theme="light"
-            defaultSelectedKeys={["1"]}
+            defaultSelectedKeys={['1']}
             mode="inline"
             items={items}
             className="h-screen flex flex-col"
