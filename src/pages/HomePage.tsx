@@ -1,18 +1,18 @@
-import Navbar from "@/components/Navbar/Navbar";
-import Sidebar from "@/components/Sidebar/Sidebar";
+import { Button } from "antd";
 
 const HomePage = () => {
   return (
     <>
-      <Navbar />
-      <div className="flex flex-row">
-        <div className="">
-          <Sidebar />
-        </div>
-        <div className="w-full flex justify-center items-center">
+        <div className="w-full flex flex-col justify-center items-center h-screen">
           <p className="text-xl font-bold">Home</p>
+        <Button
+        type="primary"
+        className="bg-[#0174BE] text-white flex text-sm h-9 align-middle items-center"
+        href="/employeeInfo"
+        >
+          Go to dashboard
+        </Button>
         </div>
-      </div>
     </>
   );
 };

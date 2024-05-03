@@ -1,8 +1,6 @@
 import BreadcrumbComponent from "@/components/BreadcrumbComponent/BreadcrumbComponent";
 import QueryBar from "@/components/EmployeeInfoComponent/QueryBar";
-import Navbar from "@/components/Navbar/Navbar";
-import Sidebar from "@/components/Sidebar/Sidebar";
-import { Table, Space, Button } from "antd";
+import { Table, Space, Button, ConfigProvider } from "antd";
 
 const dataSource = [
   {
@@ -62,8 +60,12 @@ const columns = [
     key: "action",
     render: () => (
       <Space size="middle">
-        <Button className=" border-[#0174BE] text-[#0174BE] text-sm">ตรวจสอบ</Button>
-        <Button className="border-[#0174BE] text-[#0174BE] text-sm">แก้ไข</Button>
+        <Button className=" border-[#0174BE] text-[#0174BE] text-sm">
+          ตรวจสอบ
+        </Button>
+        <Button className="border-[#0174BE] text-[#0174BE] text-sm">
+          แก้ไข
+        </Button>
       </Space>
     ),
   },
@@ -71,12 +73,6 @@ const columns = [
 
 const EmployeeInfo = () => {
   return (
-    <>
-      <Navbar />
-      <div className="flex flex-row">
-        <div>
-          <Sidebar />
-        </div>
         <div className="w-full bg-[#f0f2f5]">
           <div className="flex flex-col">
             <BreadcrumbComponent />
@@ -91,23 +87,31 @@ const EmployeeInfo = () => {
                 <p className="px-6 py-5 text-lg">Search Table</p>
               </div>
               <div className="flex px-6 items-center justify-end">
-                <Button type="primary" className="bg-[#0174BE] text-white text-sm h-9">
+                <Button
+                  type="primary"
+                  className="bg-[#0174BE] text-white flex text-sm h-9 align-middle items-center"
+                  href="addEmployee"
+                >
                   เพิ่มข้อมูลพนักงาน
                 </Button>
               </div>
             </div>
 
             <div className="mx-6 text-sm">
-              <Table
-                className=""
-                dataSource={dataSource}
-                columns={columns}
-              />
+              <ConfigProvider
+                theme={{
+                  components: {
+                    Table: {
+                      cellFontSize: 15,
+                    },
+                  },
+                }}
+              >
+              <Table className="" dataSource={dataSource} columns={columns} />
+              </ConfigProvider>
             </div>
           </div>
         </div>
-      </div>
-    </>
   );
 };
 
