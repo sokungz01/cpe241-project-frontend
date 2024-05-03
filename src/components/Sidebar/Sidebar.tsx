@@ -56,7 +56,7 @@ const Sidebar: React.FC = () => {
 
   return (
     <>
-      <Layout className="shadow-md overflow-hidden">
+      <Layout className="shadow-md overflow-hidden z-10">
         <Sider
           collapsible
           collapsed={collapsed}
