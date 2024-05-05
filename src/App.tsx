@@ -1,4 +1,4 @@
-import { NotFoundPage } from "@/pages";
+import { HomePage, NotFoundPage } from "@/pages";
 import { ConfigProvider } from "antd";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
@@ -31,7 +31,8 @@ function App() {
       <ConfigProvider theme={theme}>
         <BrowserRouter basename="/">
           <Routes>
-            <Route path="login" element={<LoginPage />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="login" element={<LoginPage />} />
 
             <Route
               path="tools"
