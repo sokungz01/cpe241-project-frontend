@@ -30,24 +30,26 @@ function App() {
     <>
       <ConfigProvider theme={theme}>
         <BrowserRouter basename="/">
-          <ProtectedLogin>
-            <Routes>
-              <Route path="tools" element={<NavbarAndSidebar />}>
-                <Route index path="employeeInfo" element={<EmployeeInfo />} />
-                <Route path="addEmployee" element={<AddEmployee />} />
-                <Route path="fixReport" element={<FixReport />} />
-                <Route path="machineInfo" element={<MachineInfo />} />
-                <Route path="stockHistory" element={<StockHistory />} />
-                <Route path="dashboard" element={<Dashboard />} />
-                <Route path="*" element={<NotFoundPage />} />
-              </Route>
-            </Routes>
-          </ProtectedLogin>
           <Routes>
-            <Route>
-              <Route path="login" element={<LoginPage />} />
+            <Route path="login" element={<LoginPage />} />
+
+            <Route
+              path="tools"
+              element={
+                <ProtectedLogin>
+                  <NavbarAndSidebar />
+                </ProtectedLogin>
+              }
+            >
+              <Route index path="employeeInfo" element={<EmployeeInfo />} />
+              <Route path="addEmployee" element={<AddEmployee />} />
+              <Route path="fixReport" element={<FixReport />} />
+              <Route path="machineInfo" element={<MachineInfo />} />
+              <Route path="stockHistory" element={<StockHistory />} />
+              <Route path="dashboard" element={<Dashboard />} />
               <Route path="*" element={<NotFoundPage />} />
             </Route>
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </BrowserRouter>
       </ConfigProvider>
