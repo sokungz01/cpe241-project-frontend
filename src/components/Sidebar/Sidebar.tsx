@@ -21,17 +21,17 @@ const items: MenuItem[] = [
   {
     key: "1",
     icon: <ProfileOutlined />,
-    label: <Link to="/employeeInfo">ข้อมูลพนักงาน</Link>,
+    label: <Link to="/tools/employeeInfo">ข้อมูลพนักงาน</Link>,
   },
   {
     key: "2",
     icon: <FormOutlined />,
-    label: <Link to="/fixReport">รายงานแจ้งซ่อม</Link>,
+    label: <Link to="/tools/fixReport">รายงานแจ้งซ่อม</Link>,
   },
   {
     key: "3",
     icon: <TableOutlined />,
-    label: <Link to="/machineInfo">ข้อมูลเครื่องจักร</Link>,
+    label: <Link to="/tools/machineInfo">ข้อมูลเครื่องจักร</Link>,
   },
   {
     key: "4",
@@ -40,14 +40,14 @@ const items: MenuItem[] = [
     children: [
       {
         key: "4-1",
-        label: <Link to="/stockHistory">ประวัติคลังสินค้า</Link>,
+        label: <Link to="/tools/stockHistory">ประวัติคลังสินค้า</Link>,
       },
     ],
   },
   {
     key: "5",
     icon: <DashboardOutlined />,
-    label: <Link to="/dashboard">Dashboard</Link>,
+    label: <Link to="/tools/dashboard">Dashboard</Link>,
   },
 ];
 
@@ -60,7 +60,7 @@ const Sidebar: React.FC = () => {
         <Sider
           collapsible
           collapsed={collapsed}
-          onCollapse={(value: any) => setCollapsed(value)}
+          onCollapse={(value: boolean) => setCollapsed(value)}
           className=""
           trigger={null}
           theme="light"
