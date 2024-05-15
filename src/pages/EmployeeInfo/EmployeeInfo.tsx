@@ -1,6 +1,7 @@
 import BreadcrumbComponent from "@/components/BreadcrumbComponent/BreadcrumbComponent";
 import QueryBar from "@/components/EmployeeInfoComponent/QueryBar";
-import { Table, Space, Button, ConfigProvider } from "antd";
+import { Button, Space, Table } from "antd";
+import { Link } from "react-router-dom";
 
 const dataSource = [
   {
@@ -73,45 +74,37 @@ const columns = [
 
 const EmployeeInfo = () => {
   return (
-        <div className="w-full bg-[#f0f2f5]">
-          <div className="flex flex-col">
-            <BreadcrumbComponent />
-          </div>
-          <div className="m-6 h-28 bg-white rounded-md">
-            <QueryBar />
-          </div>
+    <div className="w-full h-full bg-[#f0f2f5]">
+      <div className="flex flex-col">
+        <BreadcrumbComponent />
+      </div>
+      <div className="m-6 bg-white rounded-md">
+        <QueryBar />
+      </div>
 
-          <div className="m-6 bg-white rounded-md">
-            <div className="flex flex-row w-full">
-              <div className="flex-1">
-                <p className="px-6 py-5 text-lg">Search Table</p>
-              </div>
-              <div className="flex px-6 items-center justify-end">
-                <Button
-                  type="primary"
-                  className="bg-[#0174BE] text-white flex text-sm h-9 align-middle items-center"
-                  href="addEmployee"
-                >
-                  เพิ่มข้อมูลพนักงาน
-                </Button>
-              </div>
-            </div>
-
-            <div className="mx-6 text-sm">
-              <ConfigProvider
-                theme={{
-                  components: {
-                    Table: {
-                      cellFontSize: 15,
-                    },
-                  },
-                }}
+      <div className="m-6 bg-white rounded-md ">
+        <div className="flex flex-col lg:flex-row w-full">
+          <div className="flex-1">
+            <p className="px-6 py-5 text-lg">Search Table</p>
+          </div>
+          <div className="flex mr-6 items-center justify-center lg:justify-end">
+            <Link to="/employeeInfo/addEmployee">
+              <Button
+                type="primary"
+                className="bg-[#0174BE] text-white flex text-sm py-3 align-middle items-center"
               >
-              <Table className="" dataSource={dataSource} columns={columns} />
-              </ConfigProvider>
-            </div>
+                เพิ่มข้อมูลพนักงาน
+              </Button>
+            </Link>
           </div>
         </div>
+
+        <div className="mx-6 text-sm overflow-x-auto">
+            <Table className="" dataSource={dataSource} columns={columns} />
+          
+        </div>
+      </div>
+    </div>
   );
 };
 

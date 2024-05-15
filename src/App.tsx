@@ -17,9 +17,13 @@ const NavbarAndSidebar = () => {
   return (
     <>
       <Navbar />
-      <div className="flex flex-row">
-        <Sidebar />
-        <Outlet />
+      <div className="flex flex-row relative">
+        <div className="flex z-10">
+          <Sidebar />
+        </div>
+        <div className="overflow-hidden w-full">
+          <Outlet />
+        </div>
       </div>
     </>
   );
@@ -31,23 +35,24 @@ function App() {
       <ConfigProvider theme={theme}>
         <BrowserRouter basename="/">
           <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="login" element={<LoginPage />} />
-
-            <Route
-              path="tools"
-              element={
+            <Route element={
                 <ProtectedLogin>
                   <NavbarAndSidebar />
-                </ProtectedLogin>
-              }
-            >
-              <Route index path="employeeInfo" element={<EmployeeInfo />} />
-              <Route path="addEmployee" element={<AddEmployee />} />
+                </ProtectedLogin>}>
+              <Route path="tools">
+                <Route index element={<EmployeeInfo />} />
+                <Route path="addEmployee" element={<AddEmployee />} />
+                <Route path="*" element={<NotFoundPage />} />
+              </Route>
               <Route path="fixReport" element={<FixReport />} />
               <Route path="machineInfo" element={<MachineInfo />} />
               <Route path="stockHistory" element={<StockHistory />} />
               <Route path="dashboard" element={<Dashboard />} />
+            </Route>
+            <Route>
+              <Route path="/" element={<HomePage />} />
+              <Route path="home" element={<HomePage />} />
+              <Route path="login" element={<LoginPage />} />
               <Route path="*" element={<NotFoundPage />} />
             </Route>
             <Route path="*" element={<NotFoundPage />} />
