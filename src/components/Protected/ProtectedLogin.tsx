@@ -34,7 +34,7 @@ const ProtectedLogin: React.FC<Props> = ({
     } catch (error) {
       navigate(errorHref);
     }
-  }, [errorHref,navigate,successHref,token]);
+  }, [errorHref, navigate, successHref, token]);
 
   if (protect && !isLogin) return null;
 
