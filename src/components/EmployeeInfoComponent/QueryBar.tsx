@@ -18,7 +18,7 @@ const filterOption = (
 const QueryBar = () => {
   return (
     <>
-      <div className="w-full p-6 flex flex-row justify-evenly flex-wrap">
+      <div className="w-full p-6 flex flex-row justify-center lg:justify-evenly flex-wrap">
         <div className="flex-1 mr-6">
           <p className=" text-black placeholder-opacity-90 text-sm h-6">
             ค้นหา

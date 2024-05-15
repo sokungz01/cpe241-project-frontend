@@ -10,6 +10,15 @@ import { ThemeConfig } from "antd";
       colorWarning: '#ffc041',
       colorSuccess: '#77de44',
       fontSize: 16,
-      fontFamily: 'Kanit',
+      fontFamily: 'Kanit',  
+    },
+    components: {
+      Select: {
+        optionFontSize : 14,
+        fontSize: 14,
+      },
+      Table: {
+        cellFontSize: 15,
+      },
     },
   }

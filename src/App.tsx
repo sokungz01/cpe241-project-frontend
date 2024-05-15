@@ -16,9 +16,13 @@ const NavbarAndSidebar = () => {
   return (
     <>
       <Navbar />
-      <div className="flex flex-row">
-        <Sidebar />
-        <Outlet />
+      <div className="flex flex-row relative">
+        <div className="flex z-10">
+          <Sidebar />
+        </div>
+        <div className="overflow-hidden w-full">
+          <Outlet />
+        </div>
       </div>
     </>
   );
@@ -31,8 +35,11 @@ function App() {
         <BrowserRouter basename="/">
           <Routes>
             <Route element={<NavbarAndSidebar />}>
-              <Route path="/employeeInfo" element={<EmployeeInfo />} />
-              <Route path="/addEmployee" element={<AddEmployee />} />
+              <Route path="employeeInfo">
+                <Route index element={<EmployeeInfo />} />
+                <Route path="addEmployee" element={<AddEmployee />} />
+                <Route path="*" element={<NotFoundPage />} />
+              </Route>
               <Route path="/fixReport" element={<FixReport />} />
               <Route path="/machineInfo" element={<MachineInfo />} />
               <Route path="/stockHistory" element={<StockHistory />} />

@@ -56,7 +56,7 @@ const Sidebar: React.FC = () => {
 
   return (
     <>
-      <Layout className="shadow-md overflow-hidden z-10">
+      <Layout className="shadow-md overflow-hidden">
         <Sider
           collapsible
           collapsed={collapsed}
@@ -77,7 +77,7 @@ const Sidebar: React.FC = () => {
           </button>
           <Menu
             theme="light"
-            defaultSelectedKeys={['1']}
+            defaultSelectedKeys={["1"]}
             mode="inline"
             items={items}
             className="h-screen flex flex-col"
