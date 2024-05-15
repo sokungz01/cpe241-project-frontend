@@ -7,12 +7,16 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepare": "husky",
+    "format": "prettier --write \"./**/*.{js,jsx,mjs,cjs,ts,tsx,json}\""
+
   },
   "dependencies": {
     "antd": "^5.16.4",
     "axios": "^1.6.8",
     "dotenv": "^16.4.1",
+    "husky": "^9.0.11",
     "path": "^0.12.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
