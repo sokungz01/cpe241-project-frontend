@@ -21,7 +21,7 @@ const LoginForm = () => {
       const token: string = response.data.token;
       localStorage.setItem("accessToken", token);
       SwalSuccess("เข้าสู่ระบบสำเร็จ", "กำลังเปลี่ยนเส้นทาง").then(()=>{
-        navigate('/')
+        navigate('/tools')
       })
       setIsLoading(false);
     } catch (err) {

@@ -1,18 +1,13 @@
-import { Button } from "antd";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
+  const navigate = useNavigate()
+  useEffect(()=>{
+    navigate("/login")
+  })
   return (
     <>
-        <div className="w-full flex flex-col justify-center items-center h-screen">
-          <p className="text-xl font-bold">Home</p>
-        <Button
-        type="primary"
-        className="bg-[#0174BE] text-white flex text-sm h-9 align-middle items-center"
-        href="/employeeInfo"
-        >
-          Go to dashboard
-        </Button>
-        </div>
     </>
   );
 };
