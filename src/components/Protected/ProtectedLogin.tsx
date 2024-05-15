@@ -32,6 +32,7 @@ const ProtectedLogin: React.FC<Props> = ({
 
       if (successHref !== null) return navigate(successHref);
     } catch (error) {
+      localStorage.removeItem("accessToken");
       navigate(errorHref);
     }
   }, [errorHref, navigate, successHref, token]);

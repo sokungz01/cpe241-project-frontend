@@ -1,5 +1,5 @@
-import UserProfilePic from "/user_profile.png";
 import { Link } from "react-router-dom";
+import UserProfilePic from "/user_profile.png";
 
 const Navbar = () => {
   return (

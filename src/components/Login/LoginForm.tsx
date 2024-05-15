@@ -1,7 +1,7 @@
 import { Login } from "@/api/authen.api";
 import { SwalError, SwalSuccess } from "@/utils/swal";
 import { Form, Input } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoLockClosedOutline } from "react-icons/io5";
 import { LuUser2 } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
@@ -10,6 +10,12 @@ const LoginForm = () => {
   const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
+  const token: string | null = localStorage.getItem("accessToken") || null;
+
+  useEffect(() => {
+    if (token) navigate("/tools");
+  });
+
   const onFinish = async () => {
     try {
       setIsLoading(true);
