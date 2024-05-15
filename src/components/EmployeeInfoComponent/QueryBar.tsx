@@ -12,7 +12,7 @@ const onSearch = (value: string) => {
 // Filter `option.label` match the user type `input`
 const filterOption = (
   input: string,
-  option?: { label: string; value: string }
+  option?: { label: string; value: string },
 ) => (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
 
 const QueryBar = () => {

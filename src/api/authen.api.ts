@@ -10,7 +10,7 @@ export async function Login(email: string, password: string) {
     },
     {
       withCredentials: true,
-    }
+    },
   );
   return result;
 }

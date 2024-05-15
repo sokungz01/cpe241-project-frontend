@@ -35,10 +35,13 @@ function App() {
       <ConfigProvider theme={theme}>
         <BrowserRouter basename="/">
           <Routes>
-            <Route element={
+            <Route
+              element={
                 <ProtectedLogin>
                   <NavbarAndSidebar />
-                </ProtectedLogin>}>
+                </ProtectedLogin>
+              }
+            >
               <Route path="tools">
                 <Route index element={<EmployeeInfo />} />
                 <Route path="addEmployee" element={<AddEmployee />} />

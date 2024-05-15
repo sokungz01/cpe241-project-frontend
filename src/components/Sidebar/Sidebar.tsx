@@ -18,12 +18,12 @@ const { Sider } = Layout;
 type MenuItem = Required<MenuProps>["items"][number];
 
 const Sidebar: React.FC = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const handleLogout = () => {
-    localStorage.removeItem("accessToken")
-    SwalSuccess("ออกจากระบบสำเร็จ", "กำลังเปลี่ยนเส้นทาง").then(()=>{
-      navigate("/login")
-    })
+    localStorage.removeItem("accessToken");
+    SwalSuccess("ออกจากระบบสำเร็จ", "กำลังเปลี่ยนเส้นทาง").then(() => {
+      navigate("/login");
+    });
   };
 
   const items: MenuItem[] = [
@@ -95,10 +95,8 @@ const Sidebar: React.FC = () => {
             items={items}
             className="h-screen flex flex-col"
           />
-          
         </Sider>
       </Layout>
-      
     </>
   );
 };

@@ -100,8 +100,7 @@ const EmployeeInfo = () => {
         </div>
 
         <div className="mx-6 text-sm overflow-x-auto">
-            <Table className="" dataSource={dataSource} columns={columns} />
-          
+          <Table className="" dataSource={dataSource} columns={columns} />
         </div>
       </div>
     </div>
