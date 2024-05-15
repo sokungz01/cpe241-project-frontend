@@ -1,6 +1,6 @@
 import BreadcrumbComponent from "@/components/BreadcrumbComponent/BreadcrumbComponent";
 import QueryBar from "@/components/EmployeeInfoComponent/QueryBar";
-import { Table, Space, Button, ConfigProvider } from "antd";
+import { Button, Space, Table } from "antd";
 import { Link } from "react-router-dom";
 
 const dataSource = [
