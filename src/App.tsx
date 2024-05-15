@@ -43,14 +43,16 @@ function App() {
               }
             >
               <Route path="tools">
-                <Route index element={<EmployeeInfo />} />
-                <Route path="addEmployee" element={<AddEmployee />} />
-                <Route path="*" element={<NotFoundPage />} />
+                <Route path="employee">
+                  <Route index element={<EmployeeInfo />} />
+                  <Route path="create" element={<AddEmployee />} />
+                  <Route path="*" element={<NotFoundPage />} />
+                </Route>
+                <Route path="fixReport" element={<FixReport />} />
+                <Route path="machineInfo" element={<MachineInfo />} />
+                <Route path="stockHistory" element={<StockHistory />} />
+                <Route path="dashboard" element={<Dashboard />} />
               </Route>
-              <Route path="fixReport" element={<FixReport />} />
-              <Route path="machineInfo" element={<MachineInfo />} />
-              <Route path="stockHistory" element={<StockHistory />} />
-              <Route path="dashboard" element={<Dashboard />} />
             </Route>
             <Route>
               <Route path="/" element={<HomePage />} />

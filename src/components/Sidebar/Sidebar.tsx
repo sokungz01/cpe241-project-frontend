@@ -30,7 +30,7 @@ const Sidebar: React.FC = () => {
     {
       key: "1",
       icon: <ProfileOutlined />,
-      label: <Link to="/tools/employeeInfo">ข้อมูลพนักงาน</Link>,
+      label: <Link to="/tools/employee">ข้อมูลพนักงาน</Link>,
     },
     {
       key: "2",

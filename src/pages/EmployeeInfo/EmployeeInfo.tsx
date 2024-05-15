@@ -88,7 +88,7 @@ const EmployeeInfo = () => {
             <p className="px-6 py-5 text-lg">Search Table</p>
           </div>
           <div className="flex mr-6 items-center justify-center lg:justify-end">
-            <Link to="/employeeInfo/addEmployee">
+            <Link to="create">
               <Button
                 type="primary"
                 className="bg-[#0174BE] text-white flex text-sm py-3 align-middle items-center"
