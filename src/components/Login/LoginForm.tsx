@@ -13,7 +13,7 @@ const LoginForm = () => {
   const token: string | null = localStorage.getItem("accessToken") || null;
 
   useEffect(() => {
-    if (token) navigate("/tools");
+    if (token) navigate("/tools/employee");
   });
 
   const onFinish = async () => {
@@ -27,7 +27,7 @@ const LoginForm = () => {
       const token: string = response.data.token;
       localStorage.setItem("accessToken", token);
       SwalSuccess("เข้าสู่ระบบสำเร็จ", "กำลังเปลี่ยนเส้นทาง").then(() => {
-        navigate("/tools");
+        navigate("/tools/employee");
       });
       setIsLoading(false);
     } catch (err) {

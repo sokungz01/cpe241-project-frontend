@@ -1,6 +1,9 @@
 import BreadcrumbComponent from "@/components/BreadcrumbComponent/BreadcrumbComponent";
 import { PictureOutlined } from "@ant-design/icons";
-import { Input, Select } from "antd";
+import { Button, Form, Input, InputNumber, Select, Upload } from "antd";
+import ImgCrop from "antd-img-crop";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const filterOption = (
   input: string,
@@ -8,82 +11,247 @@ const filterOption = (
 ) => (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
 
 const AddEmployee = () => {
+  const [form] = Form.useForm();
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const onFinish = async () => {
+    try {
+      setLoading(true);
+    } catch (err) {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="w-full h-full bg-[#f0f2f5]">
       <div className="flex flex-col">
         <BreadcrumbComponent />
       </div>
-      <div className="flex flex-col lg:flex-row px-6 gap-4 mt-6">
-        <div className=" w-full lg:w-1/3 bg-white rounded-md">
-          <div className="flex flex-col mx-6 mt-6 mb-4">
-            <p className="text-sm font-medium">รูปภาพ</p>
-          </div>
-          <div className="flex flex-col content-center justify-center text-center border-gray-300 border mx-6 py-10">
-            <PictureOutlined className=" opacity-30 text-4xl items-center justify-center mt-6 mb-8" />
-            <p className="items-center align-middle justify-center text-sm">
-              Click or drag file to this area to upload
-            </p>
-            <p className=" text-[10px] opacity-40 mt-1 leading-3">
-              Support for a single or bulk upload. Strictly prohibit <br /> from
-              uploading company data or other band files
-            </p>
-          </div>
-          <div className="flex text-center w-full justify-center text-sm opacity-40 my-4">
-            <p>Recommended resolution is 640*640 with file size 2 MB</p>
-          </div>
-        </div>
-
-        <div className=" bg-white w-full lg:w-2/3 rounded-md px-6">
-          <div className="mt-6">
-            <p className=" text-sm font-medium">ข้อมูลส่วนตัว</p>
-          </div>
-
-          <div className="flex flex-col gap-y-4 mt-4">
-            <div className=" flex flex-col gap-x-4 lg:flex-row">
-              <div className=" flex flex-col w-full lg:w-1/2">
-                <p className=" text-sm font-normal">ชื่อ</p>
-                <Input
-                  className=" w-full mt-2 text-sm h-8"
-                  placeholder="ชื่อ"
-                />
-              </div>
-              <div className=" flex flex-col w-full lg:w-1/2">
-                <p className=" text-sm font-normal">นามสกุล</p>
-                <Input
-                  className=" w-full mt-2 text-sm h-8"
-                  placeholder="นามสกุล"
-                />
-              </div>
+      <Form form={form} layout="vertical" onFinish={onFinish}>
+        <div className="flex flex-col lg:flex-row px-6 gap-4 mt-6">
+          <div className=" w-full h-fit lg:w-1/3 bg-white rounded-md">
+            <div className="flex flex-col mx-6 mt-6 mb-4">
+              <p className="text-sm font-medium">รูปภาพ</p>
             </div>
-
-            <div className=" flex flex-row gap-x-4 ">
-              <div className=" flex flex-col w-full lg:w-1/2">
-                <p className=" text-sm font-normal">ตำแหน่ง</p>
-                <Select
-                  showSearch
-                  className=" w-full mt-2 text-sm placeholder:text-sm"
-                  placeholder="ตำแหน่ง"
-                  filterOption={filterOption}
-                  options={[
-                    {
-                      value: "employee",
-                      label: "พนักงานทั่วไป",
-                    },
-                    {
-                      value: "technician",
-                      label: "ช่าง",
-                    },
-                    {
-                      value: "admin",
-                      label: "แอดมิน",
-                    },
-                  ]}
-                />
-              </div>
+            <div className="w-full flex flex-row justify-center">
+              <Form.Item
+                name="avatarImage"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please upload your picture!",
+                  },
+                ]}
+              >
+                <ImgCrop>
+                  <Upload className="cursor-pointer">
+                    <div className="flex flex-col content-center justify-center text-center border-gray-300 border mx-6 py-10">
+                      <PictureOutlined className=" opacity-30 text-4xl items-center justify-center mt-6 mb-8" />
+                      <p className="items-center align-middle justify-center text-sm">
+                        Click or drag file to this area to upload
+                      </p>
+                      <p className=" text-[10px] opacity-40 mt-1 leading-3">
+                        Support for a single or bulk upload. Strictly prohibit{" "}
+                        <br /> from uploading company data or other band files
+                      </p>
+                    </div>
+                    <div className="flex text-center w-full justify-center text-sm opacity-40 my-4">
+                      <p>
+                        Recommended resolution is 640*640 with file size 2 MB
+                      </p>
+                    </div>
+                  </Upload>
+                </ImgCrop>
+              </Form.Item>
             </div>
           </div>
+
+          <div className=" bg-white w-full lg:w-2/3 rounded-md px-6">
+            <div className="mt-6">
+              <p className=" text-md font-medium">ข้อมูลส่วนตัว</p>
+            </div>
+
+            <div className="flex flex-col gap-y-4 mt-4">
+              <div className=" flex flex-col gap-x-4 lg:flex-row">
+                <div className=" flex flex-col w-full lg:w-1/2">
+                  <Form.Item
+                    label="ชื่อ"
+                    name="name"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your name!",
+                      },
+                    ]}
+                  >
+                    <Input
+                      className=" w-full mt-2 text-sm h-8"
+                      placeholder="ชื่อ"
+                      disabled={loading}
+                    />
+                  </Form.Item>
+                </div>
+                <div className=" flex flex-col w-full lg:w-1/2">
+                  <Form.Item
+                    label="นามสกุล"
+                    name="surname"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your surname!",
+                      },
+                    ]}
+                  >
+                    <Input
+                      className=" w-full mt-2 text-sm h-8"
+                      placeholder="นามสกุล"
+                      disabled={loading}
+                    />
+                  </Form.Item>
+                </div>
+              </div>
+
+              <div className=" flex flex-col gap-x-4 lg:flex-row">
+                <div className=" flex flex-col w-full lg:w-1/2">
+                  <Form.Item
+                    label="ตำแหน่ง"
+                    name="position"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your position!",
+                      },
+                    ]}
+                  >
+                    <Select
+                      showSearch
+                      className=" w-full mt-2 text-sm placeholder:text-sm"
+                      placeholder="ตำแหน่ง"
+                      filterOption={filterOption}
+                      disabled={loading}
+                      options={[
+                        {
+                          value: "employee",
+                          label: "พนักงานทั่วไป",
+                        },
+                        {
+                          value: "technician",
+                          label: "ช่าง",
+                        },
+                        {
+                          value: "admin",
+                          label: "แอดมิน",
+                        },
+                      ]}
+                    />
+                  </Form.Item>
+                </div>
+                <div className=" flex flex-col w-full lg:w-1/2">
+                  <Form.Item
+                    label="โบนัส"
+                    name="bonus"
+                    rules={[
+                      { type: "number", message: "Please input valid number" },
+                      {
+                        required: true,
+                        message: "Please input your bonus!",
+                      },
+                    ]}
+                  >
+                    <InputNumber
+                      controls={false}
+                      step={0}
+                      min={0}
+                      className=" w-full mt-2 text-sm h-8"
+                      placeholder="โบนัส"
+                      disabled={loading}
+                    />
+                  </Form.Item>
+                </div>
+              </div>
+              <div className=" flex flex-col gap-x-4 lg:flex-row">
+                <div className=" flex flex-col w-full lg:w-1/2">
+                  <Form.Item
+                    label="อีเมล"
+                    name="email"
+                    rules={[
+                      {
+                        type: "email",
+                        message: "Please input the valid email!",
+                      },
+                      {
+                        required: true,
+                        message: "Please input your email!",
+                      },
+                    ]}
+                  >
+                    <Input
+                      className=" w-full mt-2 text-sm h-8"
+                      placeholder="อีเมล"
+                      disabled={loading}
+                    />
+                  </Form.Item>
+                </div>
+              </div>
+              <div className="my-4">
+                <p className="font-medium text-md ">ตั้งรหัสผ่าน</p>
+                <div className=" flex flex-col gap-x-4 lg:flex-row mt-2">
+                  <div className=" flex flex-col w-full lg:w-1/2">
+                    <Form.Item
+                      label="รหัสผ่าน"
+                      name="password"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please input your password!",
+                        },
+                      ]}
+                    >
+                      <Input.Password
+                        className=" w-full mt-2 text-sm h-8"
+                        placeholder="รหัสผ่าน"
+                        disabled={loading}
+                      />
+                    </Form.Item>
+                  </div>
+                  <div className=" flex flex-col w-full lg:w-1/2">
+                    <Form.Item
+                      label="รหัสผ่าน (อีกครั้ง)"
+                      name="repassword"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please input your re-password!",
+                        },
+                      ]}
+                    >
+                      <Input.Password
+                        className=" w-full mt-2 text-sm h-8"
+                        placeholder="รหัสผ่าน"
+                        disabled={loading}
+                      />
+                    </Form.Item>
+                  </div>
+                </div>
+              </div>
+              <div className="flex justify-end w-full my-4">
+                <Link to="../">
+                  <Button htmlType="button" className="px-6 mx-2" size="middle">
+                    ยกเลิก
+                  </Button>
+                </Link>
+                <Button
+                  htmlType="submit"
+                  className="px-6 bg-primary text-white"
+                  size="middle"
+                >
+                  ตกลง
+                </Button>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      </Form>
     </div>
   );
 };

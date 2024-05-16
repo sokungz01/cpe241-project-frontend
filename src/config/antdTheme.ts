@@ -17,6 +17,10 @@ export const theme: ThemeConfig = {
       optionFontSize: 14,
       fontSize: 14,
     },
+    Form: {
+      verticalLabelPadding: 0,
+      itemMarginBottom: 4,
+    },
     Table: {
       cellFontSize: 15,
     },
