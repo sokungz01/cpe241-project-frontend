@@ -124,7 +124,7 @@ const AddEmployee = () => {
   return (
     <div className="w-full h-full bg-[#f0f2f5]">
       <div className="flex flex-col">
-        <BreadcrumbComponent links={BreadCrumbLinks} title="เพิ่มพนักงาน"/>
+        <BreadcrumbComponent links={BreadCrumbLinks} title="เพิ่มพนักงาน" />
       </div>
       <Form form={form} layout="vertical" onFinish={onFinish}>
         <div className="flex flex-col lg:flex-row px-6 gap-4 mt-6">

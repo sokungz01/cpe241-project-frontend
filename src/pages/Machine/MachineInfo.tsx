@@ -1,6 +1,8 @@
 import { GetAllMachine } from "@/api/machine.api";
+import { GetAllMachineType } from "@/api/machinetype.api";
 import BreadcrumbComponent from "@/components/BreadcrumbComponent/BreadcrumbComponent";
 import { IMachine } from "@/interface/machine.interface";
+import { IMachineType } from "@/interface/machinetype.interface";
 import { IBreadcrumb } from "@/interface/utils.interface";
 import { Button, Space, Table } from "antd";
 import { useMemo, useState } from "react";
@@ -9,6 +11,7 @@ import { Link } from "react-router-dom";
 const MachineInfo = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [machineData, setMachineData] = useState<IMachine[]>([]);
+  const [machineTypeData, setMachineTypeData] = useState<IMachineType[]>([]);
 
   const BreadCrumbLinks: IBreadcrumb[] = [
     {
@@ -20,7 +23,16 @@ const MachineInfo = () => {
     },
   ];
 
-  const fetchMachineAll = async () => {
+  const fetchMachineTypeData = async () => {
+    try {
+      const result = await GetAllMachineType();
+      setMachineTypeData(result.data)
+    } catch (err) {
+      throw new Error("Error! Fetching data failed");
+    }
+  };
+
+  const fetchMachineData = async () => {
     setLoading(true);
     try {
       const result = await GetAllMachine();
@@ -32,8 +44,8 @@ const MachineInfo = () => {
     }
   };
 
-  useMemo(async () => {
-    await fetchMachineAll();
+  useMemo(() => {
+    Promise.all([fetchMachineData(), fetchMachineTypeData()]);
   }, []);
 
   const columns = [
@@ -51,6 +63,7 @@ const MachineInfo = () => {
       title: "ประเภทเครื่องจักร",
       dataIndex: "machineTypeID",
       key: "machineTypeID",
+      render: (record:number) => machineTypeData.find(item => item.machinetypeID === record)?.machinetypeName
     },
     {
       title: "ยี่ห้อ",
@@ -66,8 +79,8 @@ const MachineInfo = () => {
       title: "วันที่เริ่มใช้งาน",
       dataIndex: "startDate",
       key: "startDate",
-      render: (row: Date) => {
-        const date = new Date(row);
+      render: (record: Date) => {
+        const date = new Date(record);
         const day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
         const month =
           date.getMonth() + 1 < 10
