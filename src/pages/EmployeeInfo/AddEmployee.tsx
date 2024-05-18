@@ -1,5 +1,5 @@
 import { CreateEmployee } from "@/api/employee.api";
-import { getPosition } from "@/api/position.api";
+import { GetAllPosition } from "@/api/position.api";
 import BreadcrumbComponent from "@/components/BreadcrumbComponent/BreadcrumbComponent";
 import { UploadImage } from "@/config/supabase";
 import { IEmployee } from "@/interface/employee.interface";
@@ -10,7 +10,7 @@ import { PictureOutlined } from "@ant-design/icons";
 import { Button, Form, Input, InputNumber, Select, Spin, Upload } from "antd";
 import ImgCrop from "antd-img-crop";
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface Option {
   label: string;
@@ -25,6 +25,7 @@ const filterOption = (input: string, option?: Option) =>
   (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
 
 const AddEmployee = () => {
+  const navigate = useNavigate()
   const [form] = Form.useForm();
   const [positionOption, setPositionOption] = useState<Option[]>([]);
   const [previewImageURL, setPreviewImageURL] = useState<string>("");
@@ -33,7 +34,7 @@ const AddEmployee = () => {
 
   const fetchPositionData = async () => {
     try {
-      const result = await getPosition();
+      const result = await GetAllPosition();
       if (result.status !== 200) {
         throw new Error("Error! Cannot fetching data");
       }
@@ -88,7 +89,9 @@ const AddEmployee = () => {
         throw new Error("Error! Can't create new user");
       }
 
-      SwalSuccess("สำเร็จ", "เพิ่มผู้ใช้สำเร็จ");
+      SwalSuccess("สำเร็จ", "เพิ่มผู้ใช้สำเร็จ").then(()=>{
+        navigate('../')
+      });
 
       setLoading(false);
     } catch (err) {
