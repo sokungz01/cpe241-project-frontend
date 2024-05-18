@@ -12,6 +12,7 @@
     "format": "prettier --write \"./**/*.{js,jsx,mjs,cjs,ts,tsx,json}\""
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.43.2",
     "antd": "^5.16.4",
     "antd-img-crop": "^4.22.0",
     "axios": "^1.6.8",
