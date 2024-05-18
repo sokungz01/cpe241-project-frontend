@@ -1,24 +1,99 @@
+import { CreateEmployee } from "@/api/employee.api";
+import { getPosition } from "@/api/position.api";
 import BreadcrumbComponent from "@/components/BreadcrumbComponent/BreadcrumbComponent";
+import { UploadImage } from "@/config/supabase";
+import { IEmployee } from "@/interface/employee.interface";
+import { IPosition } from "@/interface/position.interface";
+import { validateUpload } from "@/utils/imageUpload";
+import { SwalError, SwalSuccess } from "@/utils/swal";
 import { PictureOutlined } from "@ant-design/icons";
-import { Button, Form, Input, InputNumber, Select, Upload } from "antd";
+import { Button, Form, Input, InputNumber, Select, Spin, Upload } from "antd";
 import ImgCrop from "antd-img-crop";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
-const filterOption = (
-  input: string,
-  option?: { label: string; value: string },
-) => (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
+interface Option {
+  label: string;
+  value: string;
+}
+
+interface IEmployeeADD extends IEmployee {
+  repassword: string;
+}
+
+const filterOption = (input: string, option?: Option) =>
+  (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
 
 const AddEmployee = () => {
   const [form] = Form.useForm();
+  const [positionOption, setPositionOption] = useState<Option[]>([]);
+  const [previewImageURL, setPreviewImageURL] = useState<string>("");
+  const [previewImageObj, setPreviewImageObj] = useState<File>();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const onFinish = async () => {
+  const fetchPositionData = async () => {
     try {
-      setLoading(true);
+      const result = await getPosition();
+      if (result.status !== 200) {
+        throw new Error("Error! Cannot fetching data");
+      }
+      const mapOption: Option[] = [];
+      const data: IPosition[] = result.data;
+      data.forEach(async (item) => {
+        mapOption.push({
+          label: item.positionName,
+          value: String(item.positionID),
+        });
+      });
+
+      setPositionOption(mapOption);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useMemo(async () => {
+    await fetchPositionData();
+  }, []);
+
+  const beforeUpload = async (file: File) => {
+    const validate = await validateUpload(file);
+    if (validate) {
+      setPreviewImageURL(URL.createObjectURL(file));
+      setPreviewImageObj(file);
+      return false;
+    }
+  };
+
+  const onFinish = async (values: IEmployeeADD) => {
+    setLoading(true);
+    try {
+      if (!values.repassword.match(values.password)) {
+        SwalError("ผิดพลาด!", "รหัสผ่านไม่ตรงกัร!");
+        throw new Error("Password not match");
+      }
+
+      if (!previewImageObj) {
+        SwalError("ผิดพลาด!", "กรุณาอัพโหลดรูปภาพ");
+        throw new Error("Error! Upload avatar image.");
+      }
+
+      const imageURL = await UploadImage(previewImageObj);
+      values.imageURL = imageURL;
+      values.positionID = Number(values.positionID);
+      const result = await CreateEmployee(values);
+
+      if (result.status !== 200) {
+        SwalError("ผิดพลาด!", "ไม่สามารถเพิ่มผู้ใช้ใหม่ได้");
+        throw new Error("Error! Can't create new user");
+      }
+
+      SwalSuccess("สำเร็จ", "เพิ่มผู้ใช้สำเร็จ");
+
+      setLoading(false);
     } catch (err) {
       setLoading(false);
+      console.log(err);
     }
   };
 
@@ -33,36 +108,59 @@ const AddEmployee = () => {
             <div className="flex flex-col mx-6 mt-6 mb-4">
               <p className="text-sm font-medium">รูปภาพ</p>
             </div>
-            <div className="w-full flex flex-row justify-center">
-              <Form.Item
-                name="avatarImage"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please upload your picture!",
-                  },
-                ]}
-              >
-                <ImgCrop>
-                  <Upload className="cursor-pointer">
-                    <div className="flex flex-col content-center justify-center text-center border-gray-300 border mx-6 py-10">
-                      <PictureOutlined className=" opacity-30 text-4xl items-center justify-center mt-6 mb-8" />
-                      <p className="items-center align-middle justify-center text-sm">
-                        Click or drag file to this area to upload
-                      </p>
-                      <p className=" text-[10px] opacity-40 mt-1 leading-3">
-                        Support for a single or bulk upload. Strictly prohibit{" "}
-                        <br /> from uploading company data or other band files
-                      </p>
-                    </div>
-                    <div className="flex text-center w-full justify-center text-sm opacity-40 my-4">
-                      <p>
-                        Recommended resolution is 640*640 with file size 2 MB
-                      </p>
-                    </div>
+            <div className="w-full flex flex-col items-center">
+              <Form.Item name="imageURL">
+                <ImgCrop aspect={640 / 640}>
+                  <Upload
+                    name="avatarImage"
+                    accept="image/png, image/jpeg, image/jpg"
+                    showUploadList={false}
+                    beforeUpload={beforeUpload}
+                    maxCount={1}
+                  >
+                    {previewImageURL !== "" ? (
+                      <img
+                        src={previewImageURL}
+                        className="aspect-square"
+                        width={640}
+                        height={640}
+                      />
+                    ) : (
+                      <>
+                        <div className="flex flex-col content-center justify-center text-center border-gray-300 border mx-6 py-10">
+                          <PictureOutlined className=" opacity-30 text-4xl items-center justify-center mt-6 mb-8" />
+                          <p className="items-center align-middle justify-center text-sm">
+                            Click or drag file to this area to upload
+                          </p>
+                          <p className=" text-[10px] opacity-40 mt-1 leading-3">
+                            Support for a single or bulk upload. Strictly
+                            prohibit <br /> from uploading company data or other
+                            band files
+                          </p>
+                        </div>
+                        <div className="flex text-center w-full justify-center text-sm opacity-40 my-4">
+                          <p>
+                            Recommended resolution is 640*640 with file size 2
+                            MB
+                          </p>
+                        </div>
+                      </>
+                    )}
                   </Upload>
                 </ImgCrop>
               </Form.Item>
+              {previewImageURL !== "" && (
+                <Button
+                  onClick={() => {
+                    setPreviewImageObj(undefined);
+                    setPreviewImageURL("");
+                  }}
+                  danger
+                  className="my-4"
+                >
+                  ลบรูปภาพ
+                </Button>
+              )}
             </div>
           </div>
 
@@ -115,7 +213,7 @@ const AddEmployee = () => {
                 <div className=" flex flex-col w-full lg:w-1/2">
                   <Form.Item
                     label="ตำแหน่ง"
-                    name="position"
+                    name="positionID"
                     rules={[
                       {
                         required: true,
@@ -129,20 +227,7 @@ const AddEmployee = () => {
                       placeholder="ตำแหน่ง"
                       filterOption={filterOption}
                       disabled={loading}
-                      options={[
-                        {
-                          value: "employee",
-                          label: "พนักงานทั่วไป",
-                        },
-                        {
-                          value: "technician",
-                          label: "ช่าง",
-                        },
-                        {
-                          value: "admin",
-                          label: "แอดมิน",
-                        },
-                      ]}
+                      options={positionOption}
                     />
                   </Form.Item>
                 </div>
@@ -244,8 +329,9 @@ const AddEmployee = () => {
                   htmlType="submit"
                   className="px-6 bg-primary text-white"
                   size="middle"
+                  disabled={loading}
                 >
-                  ตกลง
+                  {loading ? <Spin /> : "ตกลง"}
                 </Button>
               </div>
             </div>
