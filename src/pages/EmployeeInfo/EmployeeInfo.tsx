@@ -65,7 +65,6 @@ const EmployeeInfo = () => {
         return item.positionID == Number(filter.positionID);
       });
     }
-
     if (filter.range !== 0) {
       const range: ESALARY_RANGE = filter.range;
       filteredData = filteredData.filter((item) => {

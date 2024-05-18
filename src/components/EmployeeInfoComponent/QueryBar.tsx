@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 // Filter `option.label` match the user type `input`
 const filterOption = (
   input: string,
-  option?: { label: string; value: string },
+  option?: { label: string; value: string }
 ) => (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
 
 const QueryBar = ({
@@ -26,7 +26,7 @@ const QueryBar = ({
 
   const salaryOptions = (
     Object.keys(ESALARY_RANGE).filter((v) =>
-      isNaN(Number(v)),
+      isNaN(Number(v))
     ) as (keyof typeof ESALARY_RANGE)[]
   ).map((key) => {
     return { label: SALARAY_RANGE[ESALARY_RANGE[key]].display, value: key };
@@ -96,12 +96,13 @@ const QueryBar = ({
             placeholder="Please select"
             className=" flex h-10 text-sm"
             optionFilterProp="children"
-            onChange={(value) => {
-              onChangeFilter("range", Number(value));
+            onChange={(option) => {
+              const salaryRange = SALARAY_RANGE[ESALARY_RANGE[option]].value;
+              onChangeFilter("range", salaryRange);
             }}
             defaultValue={null}
             value={
-              queryFilter.range === 0 ? null : salaryOptions[queryFilter.range]
+              queryFilter.range === 0 ? null : salaryOptions[queryFilter.range].value
             }
             filterOption={filterOption}
             options={salaryOptions}
