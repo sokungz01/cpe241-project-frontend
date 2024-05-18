@@ -2,7 +2,7 @@ import { IEmployee } from "@/interface/employee.interface";
 import { createContext } from "react";
 
 export const initialAuth: IEmployee = {
-  employeeID: 0,
+  id: 0,
   name: "",
   surname: "",
   imageURL: "",
