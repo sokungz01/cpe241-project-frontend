@@ -25,7 +25,7 @@ const filterOption = (input: string, option?: Option) =>
   (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
 
 const AddEmployee = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [form] = Form.useForm();
   const [positionOption, setPositionOption] = useState<Option[]>([]);
   const [previewImageURL, setPreviewImageURL] = useState<string>("");
@@ -89,8 +89,8 @@ const AddEmployee = () => {
         throw new Error("Error! Can't create new user");
       }
 
-      SwalSuccess("สำเร็จ", "เพิ่มผู้ใช้สำเร็จ").then(()=>{
-        navigate('../')
+      SwalSuccess("สำเร็จ", "เพิ่มผู้ใช้สำเร็จ").then(() => {
+        navigate("../");
       });
 
       setLoading(false);
