@@ -12,6 +12,9 @@ import LoginPage from "./pages/LoginPage";
 import MachineInfo from "./pages/MachineInfo";
 import StockHistory from "./pages/StockHistory";
 import ProtectedLogin from "./components/Protected/ProtectedLogin";
+import { AuthContext, initialAuth } from "./context/auth.context";
+import { IEmployee } from "./interface/employee.interface";
+import { useState } from "react";
 
 const NavbarAndSidebar = () => {
   return (
@@ -30,39 +33,42 @@ const NavbarAndSidebar = () => {
 };
 
 function App() {
+  const [authContext, setAuthContext] = useState<IEmployee>(initialAuth);
   return (
     <>
       <ConfigProvider theme={theme}>
-        <BrowserRouter basename="/">
-          <Routes>
-            <Route
-              element={
-                <ProtectedLogin>
-                  <NavbarAndSidebar />
-                </ProtectedLogin>
-              }
-            >
-              <Route path="tools">
-                <Route path="employee">
-                  <Route index element={<EmployeeInfo />} />
-                  <Route path="create" element={<AddEmployee />} />
-                  <Route path="*" element={<NotFoundPage />} />
+        <AuthContext.Provider value={{ authContext, setAuthContext }}>
+          <BrowserRouter basename="/">
+            <Routes>
+              <Route
+                element={
+                  <ProtectedLogin>
+                    <NavbarAndSidebar />
+                  </ProtectedLogin>
+                }
+              >
+                <Route path="tools">
+                  <Route path="employee">
+                    <Route index element={<EmployeeInfo />} />
+                    <Route path="create" element={<AddEmployee />} />
+                    <Route path="*" element={<NotFoundPage />} />
+                  </Route>
+                  <Route path="fixReport" element={<FixReport />} />
+                  <Route path="machineInfo" element={<MachineInfo />} />
+                  <Route path="stockHistory" element={<StockHistory />} />
+                  <Route path="dashboard" element={<Dashboard />} />
                 </Route>
-                <Route path="fixReport" element={<FixReport />} />
-                <Route path="machineInfo" element={<MachineInfo />} />
-                <Route path="stockHistory" element={<StockHistory />} />
-                <Route path="dashboard" element={<Dashboard />} />
               </Route>
-            </Route>
-            <Route>
-              <Route path="/" element={<HomePage />} />
-              <Route path="home" element={<HomePage />} />
-              <Route path="login" element={<LoginPage />} />
+              <Route>
+                <Route path="/" element={<HomePage />} />
+                <Route path="home" element={<HomePage />} />
+                <Route path="login" element={<LoginPage />} />
+                <Route path="*" element={<NotFoundPage />} />
+              </Route>
               <Route path="*" element={<NotFoundPage />} />
-            </Route>
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
-        </BrowserRouter>
+            </Routes>
+          </BrowserRouter>
+        </AuthContext.Provider>
       </ConfigProvider>
     </>
   );

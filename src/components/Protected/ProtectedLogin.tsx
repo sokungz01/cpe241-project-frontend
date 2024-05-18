@@ -18,14 +18,14 @@ const ProtectedLogin: React.FC<Props> = ({
   const [isLogin, setIsLogin] = useState<boolean>(false);
   const navigate = useNavigate();
   const token = localStorage.getItem("accessToken") || "";
-
+  
   useMemo(async () => {
     try {
       if (!token || token === "") {
         localStorage.removeItem("accessToken");
         navigate("/login");
       }
-
+      
       await CheckToken(token);
 
       setIsLogin(true);

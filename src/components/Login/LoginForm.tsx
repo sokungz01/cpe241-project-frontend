@@ -25,6 +25,7 @@ const LoginForm = () => {
         throw new Error("Failed to login");
       }
       const token: string = response.data.token;
+
       localStorage.setItem("accessToken", token);
       SwalSuccess("เข้าสู่ระบบสำเร็จ", "กำลังเปลี่ยนเส้นทาง").then(() => {
         navigate("/tools/employee");
