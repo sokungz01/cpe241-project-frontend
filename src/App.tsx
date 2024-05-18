@@ -5,11 +5,11 @@ import Navbar from "./components/Navbar/Navbar";
 import Sidebar from "./components/Sidebar/Sidebar";
 import { theme } from "./config/antdTheme";
 import Dashboard from "./pages/Dashboard";
-import AddEmployee from "./pages/EmployeeInfo/AddEmployee";
-import EmployeeInfo from "./pages/EmployeeInfo/EmployeeInfo";
+import AddEmployee from "./pages/Employee/AddEmployee";
+import EmployeeInfo from "./pages/Employee/EmployeeInfo";
 import FixReport from "./pages/FixReport";
 import LoginPage from "./pages/LoginPage";
-import MachineInfo from "./pages/MachineInfo";
+import MachineInfo from "./pages/Machine/MachineInfo";
 import StockHistory from "./pages/StockHistory";
 import ProtectedLogin from "./components/Protected/ProtectedLogin";
 import { AuthContext, initialAuth } from "./context/auth.context";
@@ -55,7 +55,7 @@ function App() {
                     <Route path="*" element={<NotFoundPage />} />
                   </Route>
                   <Route path="fixReport" element={<FixReport />} />
-                  <Route path="machineInfo" element={<MachineInfo />} />
+                  <Route path="machine" element={<MachineInfo />} />
                   <Route path="stockHistory" element={<StockHistory />} />
                   <Route path="dashboard" element={<Dashboard />} />
                 </Route>

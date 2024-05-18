@@ -9,3 +9,8 @@ export interface Filter {
   positionID: number;
   range: number;
 }
+
+export interface IBreadcrumb {
+  title: string;
+  href?: string;
+}

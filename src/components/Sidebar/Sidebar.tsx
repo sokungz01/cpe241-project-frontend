@@ -40,7 +40,7 @@ const Sidebar: React.FC = () => {
     {
       key: "3",
       icon: <TableOutlined />,
-      label: <Link to="/tools/machineInfo">ข้อมูลเครื่องจักร</Link>,
+      label: <Link to="/tools/machine">ข้อมูลเครื่องจักร</Link>,
     },
     {
       key: "4",

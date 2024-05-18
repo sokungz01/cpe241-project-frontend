@@ -4,6 +4,7 @@ import BreadcrumbComponent from "@/components/BreadcrumbComponent/BreadcrumbComp
 import { UploadImage } from "@/config/supabase";
 import { IEmployee } from "@/interface/employee.interface";
 import { IPosition } from "@/interface/position.interface";
+import { IBreadcrumb } from "@/interface/utils.interface";
 import { validateUpload } from "@/utils/imageUpload";
 import { SwalError, SwalSuccess } from "@/utils/swal";
 import { PictureOutlined } from "@ant-design/icons";
@@ -31,6 +32,16 @@ const AddEmployee = () => {
   const [previewImageURL, setPreviewImageURL] = useState<string>("");
   const [previewImageObj, setPreviewImageObj] = useState<File>();
   const [loading, setLoading] = useState<boolean>(false);
+  const BreadCrumbLinks: IBreadcrumb[] = [
+    {
+      title: "ข้อมูลพนักงาน",
+      href: "./",
+    },
+    {
+      title: "เพิ่มพนักงาน",
+    },
+  ];
+  // const { id } = useParams();
 
   const fetchPositionData = async () => {
     try {
@@ -52,6 +63,16 @@ const AddEmployee = () => {
       console.log(err);
     }
   };
+
+  // const fetchEmployeeData = async (userID: number) => {
+  //   try {
+  //     if(!userID || userID === 0) throw new Error('Error! Invalid userID')
+  //     const result = await GetEmployeeByID (userID)
+  //     form.setFieldValues(result.data)
+  //   } catch (err) {
+  // console.log(err)
+  //   }
+  // };
 
   useMemo(async () => {
     await fetchPositionData();
@@ -103,7 +124,7 @@ const AddEmployee = () => {
   return (
     <div className="w-full h-full bg-[#f0f2f5]">
       <div className="flex flex-col">
-        <BreadcrumbComponent />
+        <BreadcrumbComponent links={BreadCrumbLinks} title="เพิ่มพนักงาน"/>
       </div>
       <Form form={form} layout="vertical" onFinish={onFinish}>
         <div className="flex flex-col lg:flex-row px-6 gap-4 mt-6">

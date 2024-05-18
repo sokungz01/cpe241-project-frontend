@@ -5,7 +5,7 @@ import QueryBar from "@/components/EmployeeInfoComponent/QueryBar";
 import { ESALARY_RANGE, SALARAY_RANGE } from "@/enum/salary.enum";
 import { IEmployee } from "@/interface/employee.interface";
 import { IPosition } from "@/interface/position.interface";
-import { Filter } from "@/interface/utils.interface";
+import { Filter, IBreadcrumb } from "@/interface/utils.interface";
 import { Button, Space, Table } from "antd";
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
@@ -20,6 +20,16 @@ const EmployeeInfo = () => {
     range: 0,
   });
   const [loading, setLoading] = useState<boolean>(true);
+
+  const BreadCrumbLinks: IBreadcrumb[] = [
+    {
+      title: "ข้อมูลพนักงาน",
+      href: "",
+    },
+    {
+      title: "ข้อมูลทั้งหมด",
+    },
+  ];
 
   const fetchAllPosition = async () => {
     try {
@@ -134,7 +144,7 @@ const EmployeeInfo = () => {
   return (
     <div className="w-full h-full bg-[#f0f2f5]">
       <div className="flex flex-col">
-        <BreadcrumbComponent />
+        <BreadcrumbComponent links={BreadCrumbLinks} title={"ข้อมูลพนักงาน"} />
       </div>
       <div className="m-6 bg-white rounded-md">
         <QueryBar positionData={positionData} setFilter={setFilter} />

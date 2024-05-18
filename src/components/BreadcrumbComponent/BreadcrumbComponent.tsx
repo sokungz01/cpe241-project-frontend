@@ -1,23 +1,18 @@
-import React from "react";
+import { IBreadcrumb } from "@/interface/utils.interface";
 import { Breadcrumb } from "antd";
 
-const BreadcrumbComponent: React.FC = () => (
+const BreadcrumbComponent = ({
+  title,
+  links,
+}: {
+  title: string;
+  links: IBreadcrumb[];
+}) => (
   <>
     <div className=" px-6 py-6 bg-white">
-      <Breadcrumb
-        className="w-full text-sm align-middle"
-        items={[
-          {
-            title: "ข้อมูลพนักงาน",
-            href: "/",
-          },
-          {
-            title: "ข้อมูลทั้งหมด",
-          },
-        ]}
-      />
+      <Breadcrumb className="w-full text-sm align-middle" items={links} />
       <div className="pt-[16px]">
-        <p className="text-xl align-middle"> ข้อมูลพนักงาน</p>
+        <p className="text-xl align-middle">{title}</p>
       </div>
     </div>
   </>
