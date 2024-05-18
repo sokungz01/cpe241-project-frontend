@@ -22,9 +22,6 @@ interface IEmployeeADD extends IEmployee {
   repassword: string;
 }
 
-const filterOption = (input: string, option?: Option) =>
-  (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
-
 const AddEmployee = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
@@ -249,7 +246,6 @@ const AddEmployee = () => {
                       showSearch
                       className=" w-full mt-2 text-sm placeholder:text-sm"
                       placeholder="ตำแหน่ง"
-                      filterOption={filterOption}
                       disabled={loading}
                       options={positionOption}
                     />

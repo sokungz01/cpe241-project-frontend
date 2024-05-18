@@ -15,6 +15,7 @@ import ProtectedLogin from "./components/Protected/ProtectedLogin";
 import { AuthContext, initialAuth } from "./context/auth.context";
 import { IEmployee } from "./interface/employee.interface";
 import { useState } from "react";
+import CreateMachinePage from "./pages/Machine/CreateMachine";
 
 const NavbarAndSidebar = () => {
   return (
@@ -54,8 +55,11 @@ function App() {
                     <Route path="edit/:id" element={<AddEmployee />} />
                     <Route path="*" element={<NotFoundPage />} />
                   </Route>
+                  <Route path="machine">
+                    <Route index element={<MachineInfo />} />
+                    <Route path="create" element={<CreateMachinePage />} />
+                  </Route>
                   <Route path="fixReport" element={<FixReport />} />
-                  <Route path="machine" element={<MachineInfo />} />
                   <Route path="stockHistory" element={<StockHistory />} />
                   <Route path="dashboard" element={<Dashboard />} />
                 </Route>

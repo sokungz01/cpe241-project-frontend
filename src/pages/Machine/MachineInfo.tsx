@@ -26,7 +26,7 @@ const MachineInfo = () => {
   const fetchMachineTypeData = async () => {
     try {
       const result = await GetAllMachineType();
-      setMachineTypeData(result.data)
+      setMachineTypeData(result.data);
     } catch (err) {
       throw new Error("Error! Fetching data failed");
     }
@@ -63,7 +63,9 @@ const MachineInfo = () => {
       title: "ประเภทเครื่องจักร",
       dataIndex: "machineTypeID",
       key: "machineTypeID",
-      render: (record:number) => machineTypeData.find(item => item.machinetypeID === record)?.machinetypeName
+      render: (record: number) =>
+        machineTypeData.find((item) => item.machinetypeID === record)
+          ?.machinetypeName,
     },
     {
       title: "ยี่ห้อ",
