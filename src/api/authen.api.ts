@@ -12,7 +12,7 @@ export async function Login(email: string, password: string) {
 }
 
 export async function CheckToken(accessToken: string) {
-  const auth = useContext(AuthContext)
+  const auth = useContext(AuthContext);
   try {
     const result = await axiosInstance.get(`/auth/me`, {
       headers: {
@@ -24,6 +24,6 @@ export async function CheckToken(accessToken: string) {
     });
     return result;
   } catch (error) {
-    return error
+    return error;
   }
 }
