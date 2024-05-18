@@ -24,12 +24,23 @@ const QueryBar = ({
   };
   const [queryFilter, setQueryFilter] = useState<Filter>(initialFilter);
 
-  const salaryOptions = (
+  const salaryOptions: Option[] = [];
+
+  salaryOptions.push({
+    label: "Please select the bonus range",
+    value: "0",
+    disabled: true,
+  });
+
+  (
     Object.keys(ESALARY_RANGE).filter((v) =>
       isNaN(Number(v))
     ) as (keyof typeof ESALARY_RANGE)[]
   ).map((key) => {
-    return { label: SALARAY_RANGE[ESALARY_RANGE[key]].display, value: key };
+    salaryOptions.push({
+      label: SALARAY_RANGE[ESALARY_RANGE[key]].display,
+      value: key,
+    });
   });
 
   const [positionOptions, setPositionOptions] = useState<Option[]>([]);
@@ -40,6 +51,11 @@ const QueryBar = ({
 
   useEffect(() => {
     const mapOption: Option[] = [];
+    mapOption.push({
+      label: "Please select the position",
+      value: "0",
+      disabled: true,
+    });
     positionData.forEach(async (item) => {
       mapOption.push({
         label: item.positionName,
@@ -78,11 +94,9 @@ const QueryBar = ({
               onChangeFilter("positionID", Number(value));
             }}
             defaultValue={null}
-            value={
-              queryFilter.positionID === 0
-                ? null
-                : positionOptions[queryFilter.positionID]
-            }
+            value={positionOptions.filter(
+              (item) => item.value === queryFilter.positionID.toString()
+            )}
             filterOption={filterOption}
             options={positionOptions}
           />
@@ -96,13 +110,14 @@ const QueryBar = ({
             placeholder="Please select"
             className=" flex h-10 text-sm"
             optionFilterProp="children"
-            onChange={(option) => {
+            onChange={(option: keyof typeof ESALARY_RANGE) => {
               const salaryRange = SALARAY_RANGE[ESALARY_RANGE[option]].value;
               onChangeFilter("range", salaryRange);
             }}
             defaultValue={null}
             value={
-              queryFilter.range === 0 ? null : salaryOptions[queryFilter.range].value
+              salaryOptions[queryFilter.range]
+                .value as keyof typeof ESALARY_RANGE
             }
             filterOption={filterOption}
             options={salaryOptions}
