@@ -9,6 +9,7 @@ import { Filter, IBreadcrumb } from "@/interface/utils.interface";
 import { Button, Space, Table } from "antd";
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import EmployeeInfoModal from "./EmployeeInfoModal";
 
 const EmployeeInfo = () => {
   const [employeeData, setEmployeeData] = useState<IEmployee[]>([]);
@@ -20,6 +21,17 @@ const EmployeeInfo = () => {
     range: 0,
   });
   const [loading, setLoading] = useState<boolean>(true);
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [employeeIndData, setEmployeeIndData] = useState<IEmployee>({
+    id: 0,
+    name: "",
+    surname: "",
+    imageURL: "",
+    bonus: 0,
+    positionID: 0,
+    email: "",
+    password: "",
+  });
 
   const BreadCrumbLinks: IBreadcrumb[] = [
     {
@@ -95,6 +107,9 @@ const EmployeeInfo = () => {
       title: "รหัสพนักงาน",
       dataIndex: "id",
       key: "id",
+      render: (record: number) => {
+        return record.toString().padStart(6, "0");
+      },
     },
     {
       title: "ชื่อ",
@@ -126,7 +141,8 @@ const EmployeeInfo = () => {
           <Button
             className=" border-[#0174BE] text-[#0174BE] text-sm"
             onClick={() => {
-              alert("KUY");
+              setEmployeeIndData(row);
+              setOpenModal(true);
             }}
           >
             ตรวจสอบ
@@ -175,6 +191,11 @@ const EmployeeInfo = () => {
           />
         </div>
       </div>
+      <EmployeeInfoModal
+        open={openModal}
+        setOpen={setOpenModal}
+        data={employeeIndData}
+      />
     </div>
   );
 };
