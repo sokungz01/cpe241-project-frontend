@@ -52,7 +52,7 @@ function App() {
                   <Route path="employee">
                     <Route index element={<EmployeeInfo />} />
                     <Route path="create" element={<AddEmployee />} />
-                    <Route path="edit/:id" element={<AddEmployee />} />
+                    <Route path="edit/:id" element={<AddEmployee isEdit />} />
                     <Route path="*" element={<NotFoundPage />} />
                   </Route>
                   <Route path="machine">

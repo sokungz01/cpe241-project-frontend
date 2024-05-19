@@ -169,7 +169,7 @@ const EmployeeInfo = () => {
       <div className="m-6 bg-white rounded-md ">
         <div className="flex flex-col lg:flex-row w-full">
           <div className="flex-1">
-            <p className="px-6 py-5 text-lg">Search Table</p>
+            <p className="px-6 py-5 text-lg">รายชื่อพนักงาน</p>
           </div>
           <div className="flex mr-6 items-center justify-center lg:justify-end">
             <Link to="create">

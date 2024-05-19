@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 // Filter `option.label` match the user type `input`
 const filterOption = (
   input: string,
-  option?: { label: string; value: string }
+  option?: { label: string; value: string },
 ) => (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
 
 const QueryBar = ({
@@ -34,7 +34,7 @@ const QueryBar = ({
 
   (
     Object.keys(ESALARY_RANGE).filter((v) =>
-      isNaN(Number(v))
+      isNaN(Number(v)),
     ) as (keyof typeof ESALARY_RANGE)[]
   ).map((key) => {
     salaryOptions.push({
@@ -96,7 +96,7 @@ const QueryBar = ({
               }}
               defaultValue={null}
               value={positionOptions.filter(
-                (item) => item.value === queryFilter.positionID.toString()
+                (item) => item.value === queryFilter.positionID.toString(),
               )}
               filterOption={filterOption}
               options={positionOptions}

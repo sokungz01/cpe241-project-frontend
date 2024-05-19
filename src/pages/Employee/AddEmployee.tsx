@@ -1,4 +1,8 @@
-import { CreateEmployee } from "@/api/employee.api";
+import {
+  CreateEmployee,
+  GetEmployeeByID,
+  UpdateEmployeeByID,
+} from "@/api/employee.api";
 import { GetAllPosition } from "@/api/position.api";
 import BreadcrumbComponent from "@/components/BreadcrumbComponent/BreadcrumbComponent";
 import { UploadImage } from "@/config/supabase";
@@ -10,8 +14,8 @@ import { SwalError, SwalSuccess } from "@/utils/swal";
 import { PictureOutlined } from "@ant-design/icons";
 import { Button, Form, Input, InputNumber, Select, Spin, Upload } from "antd";
 import ImgCrop from "antd-img-crop";
-import { useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useCallback, useMemo, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 interface Option {
   label: string;
@@ -22,7 +26,7 @@ interface IEmployeeADD extends IEmployee {
   repassword: string;
 }
 
-const AddEmployee = () => {
+const AddEmployee = ({ isEdit }: { isEdit?: boolean }) => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const [positionOption, setPositionOption] = useState<Option[]>([]);
@@ -38,7 +42,16 @@ const AddEmployee = () => {
       title: "เพิ่มพนักงาน",
     },
   ];
-  // const { id } = useParams();
+  const EditBreadCrumbLinks: IBreadcrumb[] = [
+    {
+      title: "ข้อมูลพนักงาน",
+      href: "../",
+    },
+    {
+      title: "แก้ไขข้อมูลพนักงาน",
+    },
+  ];
+  const { id } = useParams();
 
   const fetchPositionData = async () => {
     try {
@@ -61,19 +74,32 @@ const AddEmployee = () => {
     }
   };
 
-  // const fetchEmployeeData = async (userID: number) => {
-  //   try {
-  //     if(!userID || userID === 0) throw new Error('Error! Invalid userID')
-  //     const result = await GetEmployeeByID (userID)
-  //     form.setFieldValues(result.data)
-  //   } catch (err) {
-  // console.log(err)
-  //   }
-  // };
+  const fetchEmployeeData = useCallback(
+    async (userID: number) => {
+      setLoading(true);
+      try {
+        if (!userID || userID === 0) throw new Error("Error! Invalid userID");
+        const result = await GetEmployeeByID(userID);
+        const employeeData: IEmployee = result.data;
+        setPreviewImageURL(employeeData.imageURL);
+        form.setFieldsValue(employeeData);
+        form.setFieldValue("positionID", employeeData.positionID.toString());
+        setLoading(false);
+      } catch (err) {
+        setLoading(false);
+        throw new Error("Error! Fetching data failed.");
+      }
+    },
+    [form, setLoading],
+  );
 
   useMemo(async () => {
     await fetchPositionData();
   }, []);
+
+  useMemo(async () => {
+    await fetchEmployeeData(Number(id));
+  }, [id, fetchEmployeeData]);
 
   const beforeUpload = async (file: File) => {
     const validate = await validateUpload(file);
@@ -118,12 +144,53 @@ const AddEmployee = () => {
     }
   };
 
+  const onFinishEdit = async (values: IEmployee) => {
+    setLoading(true);
+    try {
+      if (!id || Number(id) === 0) throw new Error("Error! userID is invalid.");
+
+      if (previewImageObj) {
+        const imageURL = await UploadImage(previewImageObj);
+        values.imageURL = imageURL;
+      }
+
+      values.positionID = Number(values.positionID);
+      values.password = "";
+
+      const result = await UpdateEmployeeByID(Number(id), values);
+      if (result.status !== 200) {
+        SwalError("ผิดพลาด!", "ไม่สามารถผู้ใชงานได้ได้");
+        throw new Error("Error! Can't update user data");
+      }
+
+      SwalSuccess("สำเร็จ", "แก้ไขข้อมูลผู้ใช้สำเร็จ").then(() => {
+        navigate("../");
+      });
+
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+      console.log(err);
+    }
+  };
+
   return (
     <div className="w-full h-full bg-[#f0f2f5]">
       <div className="flex flex-col">
-        <BreadcrumbComponent links={BreadCrumbLinks} title="เพิ่มพนักงาน" />
+        {isEdit ? (
+          <BreadcrumbComponent
+            links={EditBreadCrumbLinks}
+            title={`แก้ไขข้อมูลพนักงาน | รหัสพนักงาน ${id && id.toString().padStart(6, "0")}`}
+          />
+        ) : (
+          <BreadcrumbComponent links={BreadCrumbLinks} title="เพิ่มพนักงาน" />
+        )}
       </div>
-      <Form form={form} layout="vertical" onFinish={onFinish}>
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={isEdit ? onFinishEdit : onFinish}
+      >
         <div className="flex flex-col lg:flex-row px-6 gap-4 mt-6">
           <div className=" w-full h-fit lg:w-1/3 bg-white rounded-md">
             <div className="flex flex-col mx-6 mt-6 mb-4">
@@ -185,7 +252,7 @@ const AddEmployee = () => {
             </div>
           </div>
 
-          <div className=" bg-white w-full lg:w-2/3 rounded-md px-6">
+          <div className=" bg-white w-full h-fit lg:w-2/3 rounded-md px-6">
             <div className="mt-6">
               <p className=" text-md font-medium">ข้อมูลส่วนตัว</p>
             </div>
@@ -298,61 +365,79 @@ const AddEmployee = () => {
                   </Form.Item>
                 </div>
               </div>
-              <div className="my-4">
-                <p className="font-medium text-md ">ตั้งรหัสผ่าน</p>
-                <div className=" flex flex-col gap-x-4 lg:flex-row mt-2">
-                  <div className=" flex flex-col w-full lg:w-1/2">
-                    <Form.Item
-                      label="รหัสผ่าน"
-                      name="password"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Please input your password!",
-                        },
-                      ]}
-                    >
-                      <Input.Password
-                        className=" w-full mt-2 text-sm h-8"
-                        placeholder="รหัสผ่าน"
-                        disabled={loading}
-                      />
-                    </Form.Item>
-                  </div>
-                  <div className=" flex flex-col w-full lg:w-1/2">
-                    <Form.Item
-                      label="รหัสผ่าน (อีกครั้ง)"
-                      name="repassword"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Please input your re-password!",
-                        },
-                      ]}
-                    >
-                      <Input.Password
-                        className=" w-full mt-2 text-sm h-8"
-                        placeholder="รหัสผ่าน"
-                        disabled={loading}
-                      />
-                    </Form.Item>
+              {!isEdit && (
+                <div className="my-4">
+                  <p className="font-medium text-md ">ตั้งรหัสผ่าน</p>
+                  <div className=" flex flex-col gap-x-4 lg:flex-row mt-2">
+                    <div className=" flex flex-col w-full lg:w-1/2">
+                      <Form.Item
+                        label="รหัสผ่าน"
+                        name="password"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please input your password!",
+                          },
+                        ]}
+                      >
+                        <Input.Password
+                          className=" w-full mt-2 text-sm h-8"
+                          placeholder="รหัสผ่าน"
+                          disabled={loading}
+                        />
+                      </Form.Item>
+                    </div>
+                    <div className=" flex flex-col w-full lg:w-1/2">
+                      <Form.Item
+                        label="รหัสผ่าน (อีกครั้ง)"
+                        name="repassword"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please input your re-password!",
+                          },
+                        ]}
+                      >
+                        <Input.Password
+                          className=" w-full mt-2 text-sm h-8"
+                          placeholder="รหัสผ่าน"
+                          disabled={loading}
+                        />
+                      </Form.Item>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="flex justify-end w-full my-4">
-                <Link to="../">
-                  <Button htmlType="button" className="px-6 mx-2" size="middle">
-                    ยกเลิก
+              )}
+              <div className="flex flex-row justify-between items-center">
+                {isEdit && (
+                  <Button
+                    htmlType="button"
+                    className="px-6 mx-2"
+                    size="middle"
+                    danger
+                  >
+                    ลบบัญชี
                   </Button>
-                </Link>
-                <Button
-                  htmlType="submit"
-                  className="px-6 bg-primary text-white"
-                  size="middle"
-                  disabled={loading}
-                >
-                  {loading ? <Spin /> : "ตกลง"}
-                </Button>
+                )}
+                <div className="flex justify-end w-full my-4">
+                  <Link to="../">
+                    <Button
+                      htmlType="button"
+                      className="px-6 mx-2"
+                      size="middle"
+                    >
+                      ยกเลิก
+                    </Button>
+                  </Link>
+                  <Button
+                    htmlType="submit"
+                    className="px-6 bg-primary text-white"
+                    size="middle"
+                    disabled={loading}
+                  >
+                    {loading ? <Spin /> : "ตกลง"}
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
