@@ -58,6 +58,10 @@ function App() {
                   <Route path="machine">
                     <Route index element={<MachineInfo />} />
                     <Route path="create" element={<CreateMachinePage />} />
+                    <Route
+                      path="edit/:id"
+                      element={<CreateMachinePage isEdit />}
+                    />
                   </Route>
                   <Route path="fixReport" element={<FixReport />} />
                   <Route path="stockHistory" element={<StockHistory />} />

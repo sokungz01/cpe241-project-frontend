@@ -10,3 +10,17 @@ export async function CreateMachine(values: IMachine) {
   const result = await axiosInstance.post("/machine", values);
   return result;
 }
+
+export async function GetMachineByID(machineID: number) {
+  if (!machineID || Number(machineID) === 0)
+    throw new Error("Error! Invalid machine id");
+  const result = await axiosInstance.get(`/machine/${machineID}`);
+  return result;
+}
+
+export async function UpdateMachineByID(machineID: number, values: IMachine) {
+  if (!machineID || Number(machineID) === 0)
+    throw new Error("Error! Invalid machine id");
+  const result = await axiosInstance.put(`/machine/${machineID}`, values);
+  return result;
+}

@@ -132,6 +132,8 @@ const EmployeeInfo = () => {
       title: "เงินพิเศษ",
       dataIndex: "bonus",
       key: "bonus",
+      render: (record: number) =>
+        record.toLocaleString("th-TH", { style: "currency", currency: "THB" }),
     },
     {
       title: "Action",

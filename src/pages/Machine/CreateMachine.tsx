@@ -1,4 +1,8 @@
-import { CreateMachine } from "@/api/machine.api";
+import {
+  CreateMachine,
+  GetMachineByID,
+  UpdateMachineByID,
+} from "@/api/machine.api";
 import { GetAllMachineType } from "@/api/machinetype.api";
 import BreadcrumbComponent from "@/components/BreadcrumbComponent/BreadcrumbComponent";
 import { IMachine } from "@/interface/machine.interface";
@@ -7,10 +11,11 @@ import { IBreadcrumb, Option } from "@/interface/utils.interface";
 import { SwalSuccess } from "@/utils/swal";
 import { Button, DatePicker, Form, Input, Select, Spin } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import { useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
+import { useCallback, useMemo, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
-const CreateMachinePage = () => {
+const CreateMachinePage = ({ isEdit }: { isEdit?: boolean }) => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [machineTypeOptions, setMachineTypeOptions] = useState<Option[]>([]);
@@ -24,6 +29,17 @@ const CreateMachinePage = () => {
       title: "เพิ่มเครื่องจักร",
     },
   ];
+  const EditBreadCrumbLinks: IBreadcrumb[] = [
+    {
+      title: "ข้อมูลเครื่องจักร",
+      href: "../",
+    },
+    {
+      title: "แก้ไขข้อมูลเครื่องจักร",
+    },
+  ];
+
+  const { id } = useParams();
 
   const fetchMachineType = async () => {
     try {
@@ -42,9 +58,36 @@ const CreateMachinePage = () => {
     }
   };
 
+  const fetchMachineData = useCallback(
+    async (machineID: number) => {
+      setLoading(true);
+      try {
+        if (!machineID || machineID === 0)
+          throw new Error("Error! Invalid machineID");
+        const result = await GetMachineByID(machineID);
+        const machineData: IMachine = result.data;
+        form.setFieldsValue(machineData);
+        form.setFieldValue(
+          "machineTypeID",
+          machineData.machineTypeID.toString(),
+        );
+        form.setFieldValue("startDate", dayjs(machineData.startDate));
+        setLoading(false);
+      } catch (err) {
+        setLoading(false);
+        throw new Error("Error! Fetching data failed.");
+      }
+    },
+    [form, setLoading],
+  );
+
   useMemo(async () => {
     await fetchMachineType();
   }, []);
+
+  useMemo(async () => {
+    await fetchMachineData(Number(id));
+  }, [id, fetchMachineData]);
 
   const onFinish = async (values: IMachine) => {
     setLoading(true);
@@ -62,12 +105,43 @@ const CreateMachinePage = () => {
     }
   };
 
+  const onFinishEdit = async (values: IMachine) => {
+    setLoading(true);
+    try {
+      if (!id || Number(id) === 0) throw new Error("Error! invalid machine id");
+      values.machineTypeID = Number(values.machineTypeID);
+      const result = await UpdateMachineByID(Number(id), values);
+      if (result.status !== 200)
+        throw new Error("Error! Put the data not success.");
+      setLoading(false);
+      SwalSuccess("สำเร็จ!", "แก้ไขข้อมูลเครื่องจักรสำเร็จ").then(() => {
+        navigate("../");
+      });
+    } catch (err) {
+      throw new Error("Error! Can not put the data.");
+    }
+  };
+
   return (
     <div className="w-full h-full bg-[#f0f2f5]">
       <div className="flex flex-col">
-        <BreadcrumbComponent links={BreadCrumbLinks} title="เพิ่มเครื่องจักร" />
+        {isEdit ? (
+          <BreadcrumbComponent
+            links={EditBreadCrumbLinks}
+            title="แก้ไขข้อมูลเครื่องจักร"
+          />
+        ) : (
+          <BreadcrumbComponent
+            links={BreadCrumbLinks}
+            title="เพิ่มเครื่องจักร"
+          />
+        )}
       </div>
-      <Form form={form} layout="vertical" onFinish={onFinish}>
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={isEdit ? onFinishEdit : onFinish}
+      >
         <div className="flex flex-col lg:flex-row px-6 gap-4 mt-6">
           <div className=" bg-white w-full  rounded-md px-6">
             <div className="mt-6">
@@ -150,6 +224,7 @@ const CreateMachinePage = () => {
                       className=" w-full mt-2 text-sm h-8"
                       placeholder="วันที่่เริ่มใช้งาน"
                       disabled={loading}
+                      format={"DD-MM-YYYY"}
                     />
                   </Form.Item>
                 </div>
