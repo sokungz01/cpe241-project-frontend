@@ -23,10 +23,14 @@ const ProtectedLogin: React.FC<Props> = ({
     try {
       if (!token || token === "") {
         localStorage.removeItem("accessToken");
-        navigate("/login");
+        navigate(errorHref);
       }
 
-      await CheckToken(token);
+      const reuslt = await CheckToken(token);
+
+      if (reuslt.status !== 200) {
+        return navigate(errorHref);
+      }
 
       setIsLogin(true);
 
