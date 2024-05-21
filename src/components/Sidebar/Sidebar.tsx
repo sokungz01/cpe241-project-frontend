@@ -11,6 +11,7 @@ import {
 import type { MenuProps } from "antd";
 import { Layout, Menu } from "antd";
 import React, { useState } from "react";
+import { LuWrench } from "react-icons/lu";
 import { RiLogoutBoxLine } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -59,6 +60,11 @@ const Sidebar: React.FC = () => {
     },
     {
       key: "5",
+      icon: <LuWrench />,
+      label: <Link to="/tools/settings">จัดการประเภท</Link>,
+    },
+    {
+      key: "6",
       icon: <DashboardOutlined />,
       label: <Link to="/tools/dashboard">Dashboard</Link>,
     },

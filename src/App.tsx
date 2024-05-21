@@ -17,6 +17,7 @@ import ItemLogInfo from "./pages/ItemLog/ItemLogInfo";
 import LoginPage from "./pages/LoginPage";
 import CreateMachinePage from "./pages/Machine/CreateMachine";
 import MachineInfo from "./pages/Machine/MachineInfo";
+import SettingsInfo from "./pages/Settings/SettingsInfo";
 
 const NavbarAndSidebar = () => {
   return (
@@ -72,6 +73,9 @@ function App() {
                       element={<CreateMachinePage isEdit />}
                     />
                     <Route path="log" element={<ItemLogInfo />} />
+                  </Route>
+                  <Route path="settings">
+                    <Route index element={<SettingsInfo />} />
                   </Route>
                   <Route path="fixReport" element={<FixReport />} />
                   <Route path="dashboard" element={<Dashboard />} />
