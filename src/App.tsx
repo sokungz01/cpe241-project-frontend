@@ -13,6 +13,7 @@ import AddEmployee from "./pages/Employee/AddEmployee";
 import EmployeeInfo from "./pages/Employee/EmployeeInfo";
 import FixReport from "./pages/FixReport";
 import ItmeInfo from "./pages/Item/ItemInfo";
+import ItemLogInfo from "./pages/ItemLog/ItemLogInfo";
 import LoginPage from "./pages/LoginPage";
 import CreateMachinePage from "./pages/Machine/CreateMachine";
 import MachineInfo from "./pages/Machine/MachineInfo";
@@ -70,6 +71,7 @@ function App() {
                       path="edit/:id"
                       element={<CreateMachinePage isEdit />}
                     />
+                    <Route path="log" element={<ItemLogInfo />} />
                   </Route>
                   <Route path="fixReport" element={<FixReport />} />
                   <Route path="dashboard" element={<Dashboard />} />

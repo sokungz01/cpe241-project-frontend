@@ -53,7 +53,7 @@ const Sidebar: React.FC = () => {
         },
         {
           key: "4-2",
-          label: <Link to="/tools/itemlog">ประวัติอุปกรณ์</Link>,
+          label: <Link to="/tools/item/log">ประวัติอุปกรณ์</Link>,
         },
       ],
     },

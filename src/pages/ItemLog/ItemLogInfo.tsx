@@ -1,17 +1,15 @@
-import { GetAllItem } from "@/api/item.api";
-import { GetALlItemCategory } from "@/api/itemCategory.api";
+import { GetAllItemLog } from "@/api/itemlog.api";
 import BreadcrumbComponent from "@/components/BreadcrumbComponent/BreadcrumbComponent";
 import { IItem } from "@/interface/item.interface";
-import { IItemCategory } from "@/interface/itemCategory.interface";
+import { IItemLog } from "@/interface/itemLog.interface";
 import { IBreadcrumb } from "@/interface/utils.interface";
 import { Button, Space, Table } from "antd";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
-const ItemInfo = () => {
+const ItemLogInfo = () => {
   const [loading, setLoading] = useState<boolean>(true);
-  const [itemData, setItemData] = useState<IItem[]>([]);
-  const [itemCategory, setItemCategory] = useState<IItemCategory[]>([]);
+  const [itemLogData, setItemLogData] = useState<IItemLog[]>([]);
 
   const BreadCrumbLinks: IBreadcrumb[] = [
     {
@@ -19,24 +17,15 @@ const ItemInfo = () => {
       href: "",
     },
     {
-      title: "ข้อมูลทั้งหมด",
+      title: "ประวัติอุปกรณ์",
     },
   ];
 
-  const fetchItemCategoryData = async () => {
-    try {
-      const result = await GetALlItemCategory();
-      setItemCategory(result.data);
-    } catch (err) {
-      throw new Error("Error! Fetching data failed");
-    }
-  };
-
-  const fetchItemData = async () => {
+  const fetchItemLogData = async () => {
     setLoading(true);
     try {
-      const result = await GetAllItem();
-      setItemData(result.data);
+      const result = await GetAllItemLog();
+      setItemLogData(result.data);
       setLoading(false);
     } catch (err) {
       setLoading(false);
@@ -44,39 +33,53 @@ const ItemInfo = () => {
     }
   };
 
-  useMemo(() => {
-    Promise.all([fetchItemData(), fetchItemCategoryData()]);
+  useMemo(async () => {
+    await fetchItemLogData();
   }, []);
 
   const columns = [
     {
-      title: "รหัสอุปกรณ์",
-      dataIndex: "itemID",
-      key: "itemID",
+      title: "เลขประวัติอุปกรณ์",
+      dataIndex: "itemLogID",
+      key: "itemLogID",
     },
     {
       title: "ชื่ออุปกรณ์",
-      dataIndex: "itemName",
       key: "itemName",
-    },
-    {
-      title: "ประเภทอุปกรณ์",
-      dataIndex: "itemCategoryID",
-      key: "itemCategoryID",
-      render: (record: number) =>
-        itemCategory.find((item) => item.categoryID === record)?.categoryName,
+      render: (row: IItemLog) => row.item.itemName,
     },
     {
       title: "ราคาอุปกรณ์ / ชิ้น",
-      dataIndex: "itemCost",
       key: "itemCost",
-      render: (record: number) =>
-        record.toLocaleString("th-TH", { style: "currency", currency: "THB" }),
+      render: (record: IItemLog) =>
+        record.item.itemCost.toLocaleString("th-TH", {
+          style: "currency",
+          currency: "THB",
+        }),
     },
     {
-      title: "จำนวนอุปกรณ์คงคลัง",
+      title: "จำนวน (ชิ้น)",
       dataIndex: "qty",
       key: "qty",
+    },
+    {
+      title: "สถานะ",
+      dataIndex: "isAdd",
+      key: "isAdd",
+      render: (record: boolean) => (
+        <ul className="list-disc">
+          {record ? (
+            <li className="marker:text-success">เพิ่มรายการ</li>
+          ) : (
+            <li className="marker:text-danger">ลบรายการ</li>
+          )}
+        </ul>
+      ),
+    },
+    {
+      title: "กระทำโดย",
+      key: "staff",
+      render: (row: IItemLog) => row.staff.name + " " + row.staff.surname,
     },
     {
       title: "Action",
@@ -104,7 +107,7 @@ const ItemInfo = () => {
     <div className="w-full h-full bg-[#f0f2f5]">
       <div className="flex flex-col">
         <BreadcrumbComponent
-          title={"ข้อมูลชิ้นส่วนอุปกรณ์"}
+          title={"ประวัติชิ้นส่วนอุปกรณ์"}
           links={BreadCrumbLinks}
         />
       </div>
@@ -114,24 +117,14 @@ const ItemInfo = () => {
           <div className="flex-1">
             <p className="px-6 py-5 text-lg">รายการทั้งหมด</p>
           </div>
-          <div className="flex mr-6 items-center justify-center lg:justify-end">
-            <Link to="create">
-              <Button
-                type="primary"
-                className="bg-[#0174BE] text-white flex text-sm py-3 align-middle items-center"
-              >
-                เพิ่มอุปกรณ์ใหม่
-              </Button>
-            </Link>
-          </div>
         </div>
 
         <div className="mx-6 text-sm overflow-x-auto">
-          <Table columns={columns} loading={loading} dataSource={itemData} />
+          <Table columns={columns} loading={loading} dataSource={itemLogData} />
         </div>
       </div>
     </div>
   );
 };
 
-export default ItemInfo;
+export default ItemLogInfo;
