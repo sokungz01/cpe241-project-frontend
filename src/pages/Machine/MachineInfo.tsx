@@ -1,10 +1,11 @@
 import { GetAllMachine } from "@/api/machine.api";
 import { GetAllMachineType } from "@/api/machinetype.api";
 import BreadcrumbComponent from "@/components/BreadcrumbComponent/BreadcrumbComponent";
+import TableInfo from "@/components/Info/TableInfo";
 import { IMachine } from "@/interface/machine.interface";
 import { IMachineType } from "@/interface/machinetype.interface";
 import { IBreadcrumb } from "@/interface/utils.interface";
-import { Button, Space, Table } from "antd";
+import { Button, Space } from "antd";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -99,6 +100,8 @@ const MachineInfo = () => {
     {
       title: "Action",
       key: "action",
+      width: 150,
+      align: "center" as const,
       render: (row: IMachine) => (
         <Space size="middle">
           <Button
@@ -128,27 +131,14 @@ const MachineInfo = () => {
         />
       </div>
 
-      <div className="m-6 bg-white rounded-md ">
-        <div className="flex flex-col lg:flex-row w-full">
-          <div className="flex-1">
-            <p className="px-6 py-5 text-lg">รายการทั้งหมด</p>
-          </div>
-          <div className="flex mr-6 items-center justify-center lg:justify-end">
-            <Link to="create">
-              <Button
-                type="primary"
-                className="bg-[#0174BE] text-white flex text-sm py-3 align-middle items-center"
-              >
-                เพิ่มข้อมูลเครื่องจักร
-              </Button>
-            </Link>
-          </div>
-        </div>
-
-        <div className="mx-6 text-sm overflow-x-auto">
-          <Table columns={columns} loading={loading} dataSource={machineData} />
-        </div>
-      </div>
+      <TableInfo
+        title="รายการทั้งหมด"
+        hrefBtn="create"
+        titleBtn="เพิ่มประเภทเครื่องจักร"
+        columns={columns}
+        dataSource={machineData}
+        loading={loading}
+      />
     </div>
   );
 };

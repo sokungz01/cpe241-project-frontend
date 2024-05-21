@@ -2,11 +2,12 @@ import { GetAllEmployee } from "@/api/employee.api";
 import { GetAllPosition } from "@/api/position.api";
 import BreadcrumbComponent from "@/components/BreadcrumbComponent/BreadcrumbComponent";
 import QueryBar from "@/components/EmployeeInfoComponent/QueryBar";
+import TableInfo from "@/components/Info/TableInfo";
 import { ESALARY_RANGE, SALARAY_RANGE } from "@/enum/salary.enum";
 import { IEmployee } from "@/interface/employee.interface";
 import { IPosition } from "@/interface/position.interface";
 import { Filter, IBreadcrumb } from "@/interface/utils.interface";
-import { Button, Space, Table } from "antd";
+import { Button, Space } from "antd";
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import EmployeeInfoModal from "./EmployeeInfoModal";
@@ -138,6 +139,8 @@ const EmployeeInfo = () => {
     {
       title: "Action",
       key: "action",
+      width: 150,
+      align: "center" as const,
       render: (row: IEmployee) => (
         <Space size="middle">
           <Button
@@ -168,31 +171,15 @@ const EmployeeInfo = () => {
         <QueryBar positionData={positionData} setFilter={setFilter} />
       </div>
 
-      <div className="m-6 bg-white rounded-md ">
-        <div className="flex flex-col lg:flex-row w-full">
-          <div className="flex-1">
-            <p className="px-6 py-5 text-lg">รายชื่อพนักงาน</p>
-          </div>
-          <div className="flex mr-6 items-center justify-center lg:justify-end">
-            <Link to="create">
-              <Button
-                type="primary"
-                className="bg-[#0174BE] text-white flex text-sm py-3 align-middle items-center"
-              >
-                เพิ่มข้อมูลพนักงาน
-              </Button>
-            </Link>
-          </div>
-        </div>
+      <TableInfo
+        title="รายการทั้งหมด"
+        hrefBtn="create"
+        titleBtn="เพิ่มพนักงาน"
+        columns={columns}
+        dataSource={employeeData}
+        loading={loading}
+      />
 
-        <div className="mx-6 text-sm overflow-x-auto">
-          <Table
-            dataSource={employeeData}
-            columns={columns}
-            loading={loading}
-          />
-        </div>
-      </div>
       <EmployeeInfoModal
         open={openModal}
         setOpen={setOpenModal}

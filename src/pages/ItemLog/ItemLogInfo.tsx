@@ -1,9 +1,10 @@
 import { GetAllItemLog } from "@/api/itemlog.api";
 import BreadcrumbComponent from "@/components/BreadcrumbComponent/BreadcrumbComponent";
+import TableInfo from "@/components/Info/TableInfo";
 import { IItem } from "@/interface/item.interface";
 import { IItemLog } from "@/interface/itemLog.interface";
 import { IBreadcrumb } from "@/interface/utils.interface";
-import { Button, Space, Table } from "antd";
+import { Button, Space } from "antd";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -84,6 +85,8 @@ const ItemLogInfo = () => {
     {
       title: "Action",
       key: "action",
+      width: 150,
+      align: "center" as const,
       render: (row: IItem) => (
         <Space size="middle">
           <Button
@@ -112,17 +115,12 @@ const ItemLogInfo = () => {
         />
       </div>
 
-      <div className="m-6 bg-white rounded-md ">
-        <div className="flex flex-col lg:flex-row w-full">
-          <div className="flex-1">
-            <p className="px-6 py-5 text-lg">รายการทั้งหมด</p>
-          </div>
-        </div>
-
-        <div className="mx-6 text-sm overflow-x-auto">
-          <Table columns={columns} loading={loading} dataSource={itemLogData} />
-        </div>
-      </div>
+      <TableInfo
+        title="รายการทั้งหมด"
+        columns={columns}
+        dataSource={itemLogData}
+        loading={loading}
+      />
     </div>
   );
 };
