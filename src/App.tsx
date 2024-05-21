@@ -1,21 +1,21 @@
 import { HomePage, NotFoundPage } from "@/pages";
 import { ConfigProvider } from "antd";
+import { useState } from "react";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
+import ProtectedLogin from "./components/Protected/ProtectedLogin";
 import Sidebar from "./components/Sidebar/Sidebar";
 import { theme } from "./config/antdTheme";
+import { AuthContext, initialAuth } from "./context/auth.context";
+import { IEmployee } from "./interface/employee.interface";
 import Dashboard from "./pages/Dashboard";
 import AddEmployee from "./pages/Employee/AddEmployee";
 import EmployeeInfo from "./pages/Employee/EmployeeInfo";
 import FixReport from "./pages/FixReport";
+import ItmeInfo from "./pages/Item/ItemInfo";
 import LoginPage from "./pages/LoginPage";
-import MachineInfo from "./pages/Machine/MachineInfo";
-import StockHistory from "./pages/StockHistory";
-import ProtectedLogin from "./components/Protected/ProtectedLogin";
-import { AuthContext, initialAuth } from "./context/auth.context";
-import { IEmployee } from "./interface/employee.interface";
-import { useState } from "react";
 import CreateMachinePage from "./pages/Machine/CreateMachine";
+import MachineInfo from "./pages/Machine/MachineInfo";
 
 const NavbarAndSidebar = () => {
   return (
@@ -63,8 +63,15 @@ function App() {
                       element={<CreateMachinePage isEdit />}
                     />
                   </Route>
+                  <Route path="item">
+                    <Route index element={<ItmeInfo />} />
+                    <Route path="create" element={<CreateMachinePage />} />
+                    <Route
+                      path="edit/:id"
+                      element={<CreateMachinePage isEdit />}
+                    />
+                  </Route>
                   <Route path="fixReport" element={<FixReport />} />
-                  <Route path="stockHistory" element={<StockHistory />} />
                   <Route path="dashboard" element={<Dashboard />} />
                 </Route>
               </Route>

@@ -45,11 +45,15 @@ const Sidebar: React.FC = () => {
     {
       key: "4",
       icon: <SettingOutlined />,
-      label: "ข้อมูลชิ้นส่วนอุปกรณ์",
+      label: "อุปกรณ์",
       children: [
         {
           key: "4-1",
-          label: <Link to="/tools/stockHistory">ประวัติคลังสินค้า</Link>,
+          label: <Link to="/tools/item">ข้อมูลชิ้นส่วนอุปกรณ์</Link>,
+        },
+        {
+          key: "4-2",
+          label: <Link to="/tools/itemlog">ประวัติอุปกรณ์</Link>,
         },
       ],
     },
