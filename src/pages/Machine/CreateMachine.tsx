@@ -1,5 +1,6 @@
 import {
   CreateMachine,
+  DeleteMachine,
   GetMachineByID,
   UpdateMachineByID,
 } from "@/api/machine.api";
@@ -40,6 +41,21 @@ const CreateMachinePage = ({ isEdit }: { isEdit?: boolean }) => {
   ];
 
   const { id } = useParams();
+
+  const handleDelete = async (id: number) => {
+    setLoading(true);
+    try {
+      const result = await DeleteMachine(id);
+      if (result.status !== 200)
+        throw new Error("Error! Delte the data not success.");
+      setLoading(false);
+      SwalSuccess("สำเร็จ!", "ลบเครื่องจักรสำเร็จ").then(() => {
+        navigate("../");
+      });
+    } catch (err) {
+      setLoading(false);
+    }
+  };
 
   const fetchMachineType = async () => {
     try {
@@ -248,20 +264,41 @@ const CreateMachinePage = ({ isEdit }: { isEdit?: boolean }) => {
                   />
                 </Form.Item>
               </div>
-              <div className="flex justify-end w-full my-4">
-                <Link to="../">
-                  <Button htmlType="button" className="px-6 mx-2" size="middle">
-                    ยกเลิก
+              <div className="flex flex-row justify-between items-center">
+                {isEdit && (
+                  <Button
+                    htmlType="button"
+                    className="px-6"
+                    size="middle"
+                    disabled={loading}
+                    onClick={async () => {
+                      await handleDelete(Number(id));
+                    }}
+                    danger
+                  >
+                    ลบเครื่องจักร
                   </Button>
-                </Link>
-                <Button
-                  htmlType="submit"
-                  className="px-6 bg-primary text-white"
-                  size="middle"
-                  disabled={loading}
-                >
-                  {loading ? <Spin /> : "ตกลง"}
-                </Button>
+                )}
+                <div className="flex justify-end w-full my-4">
+                  <Link to="../">
+                    <Button
+                      htmlType="button"
+                      className="px-6 mx-2"
+                      size="middle"
+                      disabled={loading}
+                    >
+                      {loading ? <Spin /> : "ยกเลิก"}
+                    </Button>
+                  </Link>
+                  <Button
+                    htmlType="submit"
+                    className="px-6 bg-primary text-white"
+                    size="middle"
+                    disabled={loading}
+                  >
+                    {loading ? <Spin /> : "ตกลง"}
+                  </Button>
+                </div>
               </div>
             </div>
           </div>

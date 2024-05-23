@@ -24,3 +24,10 @@ export async function UpdateMachineByID(machineID: number, values: IMachine) {
   const result = await axiosInstance.put(`/machine/${machineID}`, values);
   return result;
 }
+
+export async function DeleteMachine(machineID: number) {
+  if (!machineID || Number(machineID) === 0)
+    throw new Error("Error! Invalid machine id");
+  const result = await axiosInstance.delete(`/machine/${machineID}`);
+  return result;
+}
