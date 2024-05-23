@@ -29,6 +29,7 @@ const ProtectedLogin: React.FC<Props> = ({
       const reuslt = await CheckToken(token);
 
       if (reuslt.status !== 200) {
+        localStorage.removeItem("accessToken");
         return navigate(errorHref);
       }
 
