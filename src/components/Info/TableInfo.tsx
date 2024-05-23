@@ -9,6 +9,7 @@ const TableInfo = ({
   columns,
   dataSource,
   loading,
+  onClick,
 }: {
   title: string;
   titleBtn?: string;
@@ -16,6 +17,7 @@ const TableInfo = ({
   columns: ColumnsType;
   dataSource: object[];
   loading: boolean;
+  onClick?: () => void;
 }) => {
   return (
     <>
@@ -24,10 +26,11 @@ const TableInfo = ({
           <div className="flex-1">
             <p className="px-6 py-5 text-lg">{title}</p>
           </div>
-          {titleBtn && hrefBtn && (
+          {titleBtn && (
             <div className="flex mr-6 items-center justify-center lg:justify-end">
-              <Link to={hrefBtn}>
+              <Link to={hrefBtn ? hrefBtn : ""}>
                 <Button
+                  onClick={onClick}
                   type="primary"
                   className="bg-[#0174BE] text-white flex text-sm py-3 align-middle items-center"
                 >

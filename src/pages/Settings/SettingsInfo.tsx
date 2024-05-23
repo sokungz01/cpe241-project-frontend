@@ -3,7 +3,6 @@ import { GetAllMachineType } from "@/api/machinetype.api";
 import { GetAllPosition } from "@/api/position.api";
 import BreadcrumbComponent from "@/components/BreadcrumbComponent/BreadcrumbComponent";
 import TableInfo from "@/components/Info/TableInfo";
-import { IItem } from "@/interface/item.interface";
 import { IMachineType } from "@/interface/machinetype.interface";
 import { IPosition } from "@/interface/position.interface";
 import { IBreadcrumb } from "@/interface/utils.interface";
@@ -94,17 +93,9 @@ const SettingsInfo = () => {
       key: "action",
       width: 150,
       align: "center" as const,
-      render: (row: IItem) => (
+      render: (row: IPosition) => (
         <Space size="middle">
-          <Button
-            className=" border-[#0174BE] text-[#0174BE] text-sm"
-            onClick={() => {
-              alert("KUY");
-            }}
-          >
-            ตรวจสอบ
-          </Button>
-          <Link to={`position/edit/${row.itemID}`}>
+          <Link to={`position/edit/${row.positionID}`}>
             <Button className="border-[#0174BE] text-[#0174BE] text-sm">
               แก้ไข
             </Button>
@@ -130,17 +121,9 @@ const SettingsInfo = () => {
       key: "action",
       width: 150,
       align: "center" as const,
-      render: (row: IItem) => (
+      render: (row: IMachineType) => (
         <Space size="middle">
-          <Button
-            className=" border-[#0174BE] text-[#0174BE] text-sm"
-            onClick={() => {
-              alert("KUY");
-            }}
-          >
-            ตรวจสอบ
-          </Button>
-          <Link to={`machinetype/edit/${row.itemID}`}>
+          <Link to={`machinetype/edit/${row.machinetypeID}`}>
             <Button className="border-[#0174BE] text-[#0174BE] text-sm">
               แก้ไข
             </Button>
@@ -166,17 +149,9 @@ const SettingsInfo = () => {
       key: "action",
       width: 150,
       align: "center" as const,
-      render: (row: IItem) => (
+      render: (row: IItemCategory) => (
         <Space size="middle">
-          <Button
-            className=" border-[#0174BE] text-[#0174BE] text-sm"
-            onClick={() => {
-              alert("KUY");
-            }}
-          >
-            ตรวจสอบ
-          </Button>
-          <Link to={`itemcategory/edit/${row.itemID}`}>
+          <Link to={`itemcategory/edit/${row.categoryID}`}>
             <Button className="border-[#0174BE] text-[#0174BE] text-sm">
               แก้ไข
             </Button>
@@ -187,39 +162,41 @@ const SettingsInfo = () => {
   ];
 
   return (
-    <div className="w-full h-full bg-[#f0f2f5]">
-      <div className="flex flex-col">
-        <BreadcrumbComponent
-          title={"จัดการประเภทข้อมูล"}
-          links={BreadCrumbLinks}
+    <>
+      <div className="w-full h-full bg-[#f0f2f5]">
+        <div className="flex flex-col">
+          <BreadcrumbComponent
+            title={"จัดการประเภทข้อมูล"}
+            links={BreadCrumbLinks}
+          />
+        </div>
+
+        <TableInfo
+          title="รายการทั้งหมด"
+          titleBtn="เพิ่มตำแหน่ง"
+          hrefBtn="position/create"
+          columns={columnsPosition}
+          dataSource={position}
+          loading={loading}
+        />
+        <TableInfo
+          title="รายการทั้งหมด"
+          hrefBtn="machinetype/create"
+          titleBtn="เพิ่มประเภทเครื่องจักร"
+          columns={columnsMachineType}
+          dataSource={machineType}
+          loading={loading}
+        />
+        <TableInfo
+          title="รายการทั้งหมด"
+          hrefBtn="itemcategory/create"
+          titleBtn="เพิ่มประเภทอุปกรณ์"
+          columns={columnsItemCategory}
+          dataSource={itemCategory}
+          loading={loading}
         />
       </div>
-
-      <TableInfo
-        title="รายการทั้งหมด"
-        hrefBtn="position/create"
-        titleBtn="เพิ่มตำแหน่ง"
-        columns={columnsPosition}
-        dataSource={position}
-        loading={loading}
-      />
-      <TableInfo
-        title="รายการทั้งหมด"
-        hrefBtn="machinetype/create"
-        titleBtn="เพิ่มประเภทเครื่องจักร"
-        columns={columnsMachineType}
-        dataSource={machineType}
-        loading={loading}
-      />
-      <TableInfo
-        title="รายการทั้งหมด"
-        hrefBtn="itemcategory/create"
-        titleBtn="เพิ่มประเภทอุปกรณ์"
-        columns={columnsItemCategory}
-        dataSource={itemCategory}
-        loading={loading}
-      />
-    </div>
+    </>
   );
 };
 
