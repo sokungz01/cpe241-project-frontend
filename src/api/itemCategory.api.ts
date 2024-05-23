@@ -1,7 +1,7 @@
 import { IItemCategory } from "@/interface/itemCategory.interface";
 import { axiosInstance } from "./axiosInstance";
 
-export async function GetALlItemCategory() {
+export async function GetAllItemCategory() {
   const result = await axiosInstance.get("/itemCategory");
   return result;
 }

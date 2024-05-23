@@ -1,4 +1,4 @@
-import { GetALlItemCategory } from "@/api/itemCategory.api";
+import { GetAllItemCategory } from "@/api/itemCategory.api";
 import { GetAllMachineType } from "@/api/machinetype.api";
 import { GetAllPosition } from "@/api/position.api";
 import BreadcrumbComponent from "@/components/BreadcrumbComponent/BreadcrumbComponent";
@@ -30,7 +30,7 @@ const SettingsInfo = () => {
   const fetchItemCategory = async () => {
     setLoading(true);
     try {
-      const result = await GetALlItemCategory();
+      const result = await GetAllItemCategory();
       setItemCatagory(result.data);
       setLoading(false);
     } catch (err) {

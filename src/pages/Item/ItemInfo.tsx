@@ -1,5 +1,5 @@
 import { GetAllItem } from "@/api/item.api";
-import { GetALlItemCategory } from "@/api/itemCategory.api";
+import { GetAllItemCategory } from "@/api/itemCategory.api";
 import BreadcrumbComponent from "@/components/BreadcrumbComponent/BreadcrumbComponent";
 import TableInfo from "@/components/Info/TableInfo";
 import { IItem } from "@/interface/item.interface";
@@ -16,7 +16,7 @@ const ItemInfo = () => {
 
   const BreadCrumbLinks: IBreadcrumb[] = [
     {
-      title: "ข้อมูชิ้นส่วนอุปกรณ์",
+      title: "ข้อมูลชิ้นส่วนอุปกรณ์",
       href: "",
     },
     {
@@ -26,7 +26,7 @@ const ItemInfo = () => {
 
   const fetchItemCategoryData = async () => {
     try {
-      const result = await GetALlItemCategory();
+      const result = await GetAllItemCategory();
       setItemCategory(result.data);
     } catch (err) {
       throw new Error("Error! Fetching data failed");

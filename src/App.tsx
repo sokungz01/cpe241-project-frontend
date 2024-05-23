@@ -21,6 +21,7 @@ import MachineInfo from "./pages/Machine/MachineInfo";
 import CreateMachineTypePage from "./pages/MachineType/CreateMachineTypePage";
 import CreatePositionPage from "./pages/Position/CreatePosition";
 import SettingsInfo from "./pages/Settings/SettingsInfo";
+import CreateItemPage from "./pages/Item/CreateItemPage";
 
 const NavbarAndSidebar = () => {
   return (
@@ -70,10 +71,10 @@ function App() {
                   </Route>
                   <Route path="item">
                     <Route index element={<ItmeInfo />} />
-                    <Route path="create" element={<CreateMachinePage />} />
+                    <Route path="create" element={<CreateItemPage />} />
                     <Route
                       path="edit/:id"
-                      element={<CreateMachinePage isEdit />}
+                      element={<CreateItemPage isEdit />}
                     />
                     <Route path="log" element={<ItemLogInfo />} />
                   </Route>
