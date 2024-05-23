@@ -184,6 +184,7 @@ const EmployeeInfo = () => {
         open={openModal}
         setOpen={setOpenModal}
         data={employeeIndData}
+        setData={setEmployeeIndData}
       />
     </div>
   );

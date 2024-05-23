@@ -1,13 +1,16 @@
+import { initialAuth } from "@/context/auth.context";
 import { IEmployee } from "@/interface/employee.interface";
 import { Button, Modal } from "antd";
 import { FaGreaterThan, FaLessThan } from "react-icons/fa";
 
 const EmployeeInfoModal = ({
   data,
+  setData,
   open,
   setOpen,
 }: {
   data: IEmployee;
+  setData?: React.Dispatch<React.SetStateAction<IEmployee>>;
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
@@ -15,7 +18,10 @@ const EmployeeInfoModal = ({
     <>
       <Modal
         open={open}
-        onCancel={() => setOpen(false)}
+        onCancel={() => {
+          setOpen(false);
+          setData && setData(initialAuth);
+        }}
         width={350}
         closeIcon={false}
         centered
@@ -25,6 +31,7 @@ const EmployeeInfoModal = ({
             color="light"
             onClick={() => {
               setOpen(false);
+              setData && setData(initialAuth);
             }}
           >
             Close
