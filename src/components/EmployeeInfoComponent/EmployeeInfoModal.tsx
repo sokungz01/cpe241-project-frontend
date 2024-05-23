@@ -1,5 +1,5 @@
 import { IEmployee } from "@/interface/employee.interface";
-import { Modal } from "antd";
+import { Button, Modal } from "antd";
 import { FaGreaterThan, FaLessThan } from "react-icons/fa";
 
 const EmployeeInfoModal = ({
@@ -19,6 +19,17 @@ const EmployeeInfoModal = ({
         width={350}
         closeIcon={false}
         centered
+        footer={[
+          <Button
+            key="button"
+            color="light"
+            onClick={() => {
+              setOpen(false);
+            }}
+          >
+            Close
+          </Button>,
+        ]}
       >
         <div className="flex flex-row justify-between items-center">
           <FaLessThan />

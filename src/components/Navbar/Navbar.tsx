@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
 import UserProfilePic from "/user_profile.png";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "@/context/auth.context";
+import EmployeeInfoModal from "../EmployeeInfoComponent/EmployeeInfoModal";
 
 const Navbar = () => {
   const authContext = useContext(AuthContext);
+  const [openModal, setOpenModal] = useState<boolean>(false);
   return (
     <>
       <div className="w-full bg-blue_header h-12 flex flex-row justify-between">
@@ -13,7 +15,12 @@ const Navbar = () => {
             Sorn Rub Som
           </Link>
         </div>
-        <div className="flex flex-row justify-end items-center pr-6 text-white">
+        <button
+          onClick={() => {
+            setOpenModal(true);
+          }}
+          className="flex flex-row justify-end items-center pr-6 text-white"
+        >
           <img
             className="size-6 mx-2 rounded-full aspect-square"
             src={authContext?.authContext.imageURL || UserProfilePic}
@@ -26,8 +33,15 @@ const Navbar = () => {
               .toLocaleUpperCase()}
             .
           </p>
-        </div>
+        </button>
       </div>
+      {authContext?.authContext && (
+        <EmployeeInfoModal
+          data={authContext?.authContext}
+          setOpen={setOpenModal}
+          open={openModal}
+        />
+      )}
     </>
   );
 };

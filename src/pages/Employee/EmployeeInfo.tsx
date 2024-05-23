@@ -10,7 +10,7 @@ import { Filter, IBreadcrumb } from "@/interface/utils.interface";
 import { Button, Space } from "antd";
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import EmployeeInfoModal from "./EmployeeInfoModal";
+import EmployeeInfoModal from "../../components/EmployeeInfoComponent/EmployeeInfoModal";
 
 const EmployeeInfo = () => {
   const [employeeData, setEmployeeData] = useState<IEmployee[]>([]);
