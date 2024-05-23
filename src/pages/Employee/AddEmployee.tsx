@@ -412,7 +412,7 @@ const AddEmployee = ({ isEdit }: { isEdit?: boolean }) => {
                 {isEdit && (
                   <Button
                     htmlType="button"
-                    className="px-6 mx-2"
+                    className="px-6"
                     size="middle"
                     danger
                   >

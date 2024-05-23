@@ -1,19 +1,18 @@
-// import { IPosition } from "@/interface/position.interface";
 import {
-  CreatePosition,
-  DeletePosition,
-  GetPositionByID,
-  UpdatePosition,
-} from "@/api/position.api";
+    CreateMachineType,
+    DeleteMachineType,
+    GetMachineTypeByID,
+    UpdateMachineType,
+} from "@/api/machinetype.api";
 import BreadcrumbComponent from "@/components/BreadcrumbComponent/BreadcrumbComponent";
-import { IPosition } from "@/interface/position.interface";
+import { IMachineType } from "@/interface/machinetype.interface";
 import { IBreadcrumb } from "@/interface/utils.interface";
 import { SwalSuccess } from "@/utils/swal";
-import { Button, Form, Input, InputNumber, Spin } from "antd";
+import { Button, Form, Input, Spin } from "antd";
 import { useCallback, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
-const CreatePositionPage = ({ isEdit }: { isEdit?: boolean }) => {
+const CreateMachineTypePage = ({ isEdit }: { isEdit?: boolean }) => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
@@ -29,7 +28,7 @@ const CreatePositionPage = ({ isEdit }: { isEdit?: boolean }) => {
       href: "../",
     },
     {
-      title: "เพิ่มตำแหน่งใหม่",
+      title: "เพิ่มประเภทเครื่องจักร",
     },
   ];
   const EditBreadCrumbLinks: IBreadcrumb[] = [
@@ -42,18 +41,18 @@ const CreatePositionPage = ({ isEdit }: { isEdit?: boolean }) => {
       href: "../",
     },
     {
-      title: "แก้ไขตำแหน่งใหม่",
+      title: "แก้ไขประเภทเครื่องจักร",
     },
   ];
 
   const handleDelete = async (id: number) => {
     setLoading(true);
     try {
-      const result = await DeletePosition(id);
+      const result = await DeleteMachineType(id);
       if (result.status !== 200)
         throw new Error("Error! Delte the data not success.");
       setLoading(false);
-      SwalSuccess("สำเร็จ!", "ลบตำแหน่งพนักงานสำเร็จ").then(() => {
+      SwalSuccess("สำเร็จ!", "ลบประเภทเครื่องจักรสำเร็จ").then(() => {
         navigate("../../");
       });
     } catch (err) {
@@ -61,14 +60,14 @@ const CreatePositionPage = ({ isEdit }: { isEdit?: boolean }) => {
     }
   };
 
-  const onFinish = async (values: IPosition) => {
+  const onFinish = async (values: IMachineType) => {
     setLoading(true);
     try {
-      const result = await CreatePosition(values);
+      const result = await CreateMachineType(values);
       if (result.status !== 200)
         throw new Error("Error! Post the data not success.");
       setLoading(false);
-      SwalSuccess("สำเร็จ!", "เพิ่มตำแหน่งพนักงานใหม่สำเร็จ").then(() => {
+      SwalSuccess("สำเร็จ!", "เพิ่มประเภทเครื่องจักรใหม่สำเร็จ").then(() => {
         navigate("../../");
       });
     } catch (err) {
@@ -76,17 +75,16 @@ const CreatePositionPage = ({ isEdit }: { isEdit?: boolean }) => {
     }
   };
 
-  const onFinishEdit = async (values: IPosition) => {
+  const onFinishEdit = async (values: IMachineType) => {
     setLoading(true);
     try {
       if (!id || Number(id) === 0) throw new Error("Error! invalid machine id");
-      values.positionID = Number(id);
-      values.positionSalary = Number(values.positionSalary);
-      const result = await UpdatePosition(Number(id), values);
+      values.machinetypeID = Number(id);
+      const result = await UpdateMachineType(Number(id), values);
       if (result.status !== 200)
         throw new Error("Error! Put the data not success.");
       setLoading(false);
-      SwalSuccess("สำเร็จ!", "แก้ไขข้อมูลตำแหน่งพนักงาน").then(() => {
+      SwalSuccess("สำเร็จ!", "แก้ไขข้อมูลประเภทเครื่องจักร").then(() => {
         navigate("../../");
       });
       setLoading(false);
@@ -96,28 +94,31 @@ const CreatePositionPage = ({ isEdit }: { isEdit?: boolean }) => {
     }
   };
 
-  const fetchPositionData = useCallback(
+  const fetchMachineType = useCallback(
     async (machineID: number) => {
       setLoading(true);
       try {
         if (!machineID || machineID === 0)
           throw new Error("Error! Invalid machineID");
-        const result = await GetPositionByID(machineID);
-        const positionData: IPosition = result.data;
-        form.setFieldsValue(positionData);
-        form.setFieldValue("positionID", positionData.positionID.toString());
+        const result = await GetMachineTypeByID(machineID);
+        const machineType: IMachineType = result.data;
+        form.setFieldsValue(machineType);
+        form.setFieldValue(
+          "machinetypeID",
+          machineType.machinetypeID.toString()
+        );
         setLoading(false);
       } catch (err) {
         setLoading(false);
         throw new Error("Error! Fetching data failed.");
       }
     },
-    [form, setLoading],
+    [form, setLoading]
   );
 
   useMemo(async () => {
-    await fetchPositionData(Number(id));
-  }, [id, fetchPositionData]);
+    await fetchMachineType(Number(id));
+  }, [id, fetchMachineType]);
 
   return (
     <>
@@ -143,46 +144,25 @@ const CreatePositionPage = ({ isEdit }: { isEdit?: boolean }) => {
           <div className="flex flex-col lg:flex-row px-6 gap-4 mt-6">
             <div className=" bg-white w-full  rounded-md px-6">
               <div className="mt-6">
-                <p className=" text-md font-medium">ข้อมูลตำแหน่งพนักงาน</p>
+                <p className=" text-md font-medium">ข้อมูลประเภทเครื่องจักร</p>
               </div>
 
               <div className="flex flex-col gap-y-4 mt-4">
                 <div className=" flex flex-col gap-x-4 lg:flex-row">
                   <div className=" flex flex-col w-full lg:w-1/2">
                     <Form.Item
-                      label="ชื่อตำแหน่ง"
-                      name="positionName"
+                      label="ชื่อเครื่องจักร"
+                      name="machinetypeName"
                       rules={[
                         {
                           required: true,
-                          message: "Please input your position name!",
+                          message: "Please input your machine type name!",
                         },
                       ]}
                     >
                       <Input
                         className=" w-full mt-2 text-sm h-8"
-                        placeholder="ชื่อตำแหน่ง"
-                        disabled={loading}
-                      />
-                    </Form.Item>
-                  </div>
-                  <div className=" flex flex-col w-full lg:w-1/2">
-                    <Form.Item
-                      label="เงินเดือนประจำตัแหน่ง"
-                      name="positionSalary"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Please input your position salary",
-                        },
-                      ]}
-                    >
-                      <InputNumber
-                        controls={false}
-                        step={0}
-                        min={0}
-                        className=" w-full mt-2 text-sm h-8"
-                        placeholder="เงินเดือนประจำตัแหน่ง "
+                        placeholder="ชื่อเครื่องจักร"
                         disabled={loading}
                       />
                     </Form.Item>
@@ -200,7 +180,7 @@ const CreatePositionPage = ({ isEdit }: { isEdit?: boolean }) => {
                       disabled={loading}
                       danger
                     >
-                      {loading ? <Spin /> : "ลบตำแหน่ง"}
+                      {loading ? <Spin /> : "ลบประเภทเครื่องจักร"}
                     </Button>
                   )}
                   <div className="flex justify-end w-full my-4">
@@ -232,4 +212,4 @@ const CreatePositionPage = ({ isEdit }: { isEdit?: boolean }) => {
     </>
   );
 };
-export default CreatePositionPage;
+export default CreateMachineTypePage;
