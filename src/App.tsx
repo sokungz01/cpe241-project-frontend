@@ -13,13 +13,14 @@ import AddEmployee from "./pages/Employee/AddEmployee";
 import EmployeeInfo from "./pages/Employee/EmployeeInfo";
 import FixReport from "./pages/FixReport";
 import ItmeInfo from "./pages/Item/ItemInfo";
+import CreateItemCategoryPage from "./pages/ItemCategory/CreateItemCategoryPage";
 import ItemLogInfo from "./pages/ItemLog/ItemLogInfo";
 import LoginPage from "./pages/LoginPage";
 import CreateMachinePage from "./pages/Machine/CreateMachine";
 import MachineInfo from "./pages/Machine/MachineInfo";
-import SettingsInfo from "./pages/Settings/SettingsInfo";
-import CreatePositionPage from "./pages/Position/CreatePosition";
 import CreateMachineTypePage from "./pages/MachineType/CreateMachineTypePage";
+import CreatePositionPage from "./pages/Position/CreatePosition";
+import SettingsInfo from "./pages/Settings/SettingsInfo";
 
 const NavbarAndSidebar = () => {
   return (
@@ -93,6 +94,16 @@ function App() {
                       <Route
                         path="edit/:id"
                         element={<CreateMachineTypePage isEdit />}
+                      />
+                    </Route>
+                    <Route path="itemcategory">
+                      <Route
+                        path="create"
+                        element={<CreateItemCategoryPage />}
+                      />
+                      <Route
+                        path="edit/:id"
+                        element={<CreateItemCategoryPage isEdit />}
                       />
                     </Route>
                   </Route>

@@ -1,18 +1,18 @@
 import {
-  CreateMachineType,
-  DeleteMachineType,
-  GetMachineTypeByID,
-  UpdateMachineType,
-} from "@/api/machinetype.api";
+  CreateItemCategory,
+  DeleteItemCategory,
+  GetItemCategoryByID,
+  UpdateItemCategory,
+} from "@/api/itemCategory.api";
 import BreadcrumbComponent from "@/components/BreadcrumbComponent/BreadcrumbComponent";
-import { IMachineType } from "@/interface/machinetype.interface";
+import { IItemCategory } from "@/interface/itemCategory.interface";
 import { IBreadcrumb } from "@/interface/utils.interface";
 import { SwalSuccess } from "@/utils/swal";
 import { Button, Form, Input, Spin } from "antd";
 import { useCallback, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
-const CreateMachineTypePage = ({ isEdit }: { isEdit?: boolean }) => {
+const CreateItemCategoryPage = ({ isEdit }: { isEdit?: boolean }) => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
@@ -28,7 +28,7 @@ const CreateMachineTypePage = ({ isEdit }: { isEdit?: boolean }) => {
       href: "../",
     },
     {
-      title: "เพิ่มประเภทเครื่องจักร",
+      title: "เพิ่มประเภทสินค้า",
     },
   ];
   const EditBreadCrumbLinks: IBreadcrumb[] = [
@@ -41,18 +41,18 @@ const CreateMachineTypePage = ({ isEdit }: { isEdit?: boolean }) => {
       href: "../",
     },
     {
-      title: "แก้ไขประเภทเครื่องจักร",
+      title: "แก้ไขประเภทสินค้า",
     },
   ];
 
   const handleDelete = async (id: number) => {
     setLoading(true);
     try {
-      const result = await DeleteMachineType(id);
+      const result = await DeleteItemCategory(id);
       if (result.status !== 200)
         throw new Error("Error! Delte the data not success.");
       setLoading(false);
-      SwalSuccess("สำเร็จ!", "ลบประเภทเครื่องจักรสำเร็จ").then(() => {
+      SwalSuccess("สำเร็จ!", "ลบประเภทสินค้าสำเร็จ").then(() => {
         navigate("../../");
       });
     } catch (err) {
@@ -60,14 +60,14 @@ const CreateMachineTypePage = ({ isEdit }: { isEdit?: boolean }) => {
     }
   };
 
-  const onFinish = async (values: IMachineType) => {
+  const onFinish = async (values: IItemCategory) => {
     setLoading(true);
     try {
-      const result = await CreateMachineType(values);
+      const result = await CreateItemCategory(values);
       if (result.status !== 200)
         throw new Error("Error! Post the data not success.");
       setLoading(false);
-      SwalSuccess("สำเร็จ!", "เพิ่มประเภทเครื่องจักรใหม่สำเร็จ").then(() => {
+      SwalSuccess("สำเร็จ!", "เพิ่มประเภทสินค้าใหม่สำเร็จ").then(() => {
         navigate("../../");
       });
     } catch (err) {
@@ -75,16 +75,16 @@ const CreateMachineTypePage = ({ isEdit }: { isEdit?: boolean }) => {
     }
   };
 
-  const onFinishEdit = async (values: IMachineType) => {
+  const onFinishEdit = async (values: IItemCategory) => {
     setLoading(true);
     try {
       if (!id || Number(id) === 0) throw new Error("Error! invalid machine id");
-      values.machinetypeID = Number(id);
-      const result = await UpdateMachineType(Number(id), values);
+      values.categoryID = Number(id);
+      const result = await UpdateItemCategory(Number(id), values);
       if (result.status !== 200)
         throw new Error("Error! Put the data not success.");
       setLoading(false);
-      SwalSuccess("สำเร็จ!", "แก้ไขข้อมูลประเภทเครื่องจักร").then(() => {
+      SwalSuccess("สำเร็จ!", "แก้ไขข้อมูลประเภทสินค้า").then(() => {
         navigate("../../");
       });
       setLoading(false);
@@ -94,19 +94,16 @@ const CreateMachineTypePage = ({ isEdit }: { isEdit?: boolean }) => {
     }
   };
 
-  const fetchMachineType = useCallback(
+  const fetchItemCategory = useCallback(
     async (machineID: number) => {
       setLoading(true);
       try {
         if (!machineID || machineID === 0)
           throw new Error("Error! Invalid machineID");
-        const result = await GetMachineTypeByID(machineID);
-        const machineType: IMachineType = result.data;
-        form.setFieldsValue(machineType);
-        form.setFieldValue(
-          "machinetypeID",
-          machineType.machinetypeID.toString(),
-        );
+        const result = await GetItemCategoryByID(machineID);
+        const ItemCategory: IItemCategory = result.data;
+        form.setFieldsValue(ItemCategory);
+        form.setFieldValue("categoryID", ItemCategory.categoryID.toString());
         setLoading(false);
       } catch (err) {
         setLoading(false);
@@ -117,8 +114,8 @@ const CreateMachineTypePage = ({ isEdit }: { isEdit?: boolean }) => {
   );
 
   useMemo(async () => {
-    await fetchMachineType(Number(id));
-  }, [id, fetchMachineType]);
+    await fetchItemCategory(Number(id));
+  }, [id, fetchItemCategory]);
 
   return (
     <>
@@ -127,12 +124,12 @@ const CreateMachineTypePage = ({ isEdit }: { isEdit?: boolean }) => {
           {isEdit ? (
             <BreadcrumbComponent
               links={EditBreadCrumbLinks}
-              title="แก้ไขข้อมูลเครื่องจักร"
+              title="แก้ไขข้อมูลประเภทสินค้า"
             />
           ) : (
             <BreadcrumbComponent
               links={BreadCrumbLinks}
-              title="เพิ่มเครื่องจักร"
+              title="เพิ่มประเภทสินค้า"
             />
           )}
         </div>
@@ -144,15 +141,15 @@ const CreateMachineTypePage = ({ isEdit }: { isEdit?: boolean }) => {
           <div className="flex flex-col lg:flex-row px-6 gap-4 mt-6">
             <div className=" bg-white w-full  rounded-md px-6">
               <div className="mt-6">
-                <p className=" text-md font-medium">ข้อมูลประเภทเครื่องจักร</p>
+                <p className=" text-md font-medium">ข้อมูลประเภทสินค้า</p>
               </div>
 
               <div className="flex flex-col gap-y-4 mt-4">
                 <div className=" flex flex-col gap-x-4 lg:flex-row">
                   <div className=" flex flex-col w-full lg:w-1/2">
                     <Form.Item
-                      label="ชื่อเครื่องจักร"
-                      name="machinetypeName"
+                      label="ชื่อประเภทสินค้า"
+                      name="categoryName"
                       rules={[
                         {
                           required: true,
@@ -162,7 +159,7 @@ const CreateMachineTypePage = ({ isEdit }: { isEdit?: boolean }) => {
                     >
                       <Input
                         className=" w-full mt-2 text-sm h-8"
-                        placeholder="ชื่อเครื่องจักร"
+                        placeholder="ชื่อประเภทสินค้า"
                         disabled={loading}
                       />
                     </Form.Item>
@@ -180,7 +177,7 @@ const CreateMachineTypePage = ({ isEdit }: { isEdit?: boolean }) => {
                       disabled={loading}
                       danger
                     >
-                      {loading ? <Spin /> : "ลบประเภทเครื่องจักร"}
+                      {loading ? <Spin /> : "ลบประเภทสินค้า"}
                     </Button>
                   )}
                   <div className="flex justify-end w-full my-4">
@@ -212,4 +209,4 @@ const CreateMachineTypePage = ({ isEdit }: { isEdit?: boolean }) => {
     </>
   );
 };
-export default CreateMachineTypePage;
+export default CreateItemCategoryPage;
