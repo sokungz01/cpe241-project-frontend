@@ -79,7 +79,7 @@ const SettingsInfo = () => {
       dataIndex: "positionName",
     },
     {
-      title: "ราคาอุปกรณ์ / ชิ้น",
+      title: "เงินประจำตำแหน่ง",
       key: "positionSalary",
       dataIndex: "positionSalary",
       render: (record: number) =>
@@ -135,12 +135,12 @@ const SettingsInfo = () => {
 
   const columnsItemCategory = [
     {
-      title: "เลขประเภทเครื่องจักร",
+      title: "เลขประเภทอุปกรณ์",
       dataIndex: "categoryID",
       key: "categoryID",
     },
     {
-      title: "ชื่อประเภทเครื่องจักร",
+      title: "ชื่อประเภทอุปกรณ์",
       key: "categoryName",
       dataIndex: "categoryName",
     },

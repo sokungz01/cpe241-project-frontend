@@ -1,12 +1,10 @@
 import { GetAllItemLog } from "@/api/itemlog.api";
 import BreadcrumbComponent from "@/components/BreadcrumbComponent/BreadcrumbComponent";
 import TableInfo from "@/components/Info/TableInfo";
-import { IItem } from "@/interface/item.interface";
 import { IItemLog } from "@/interface/itemLog.interface";
 import { IBreadcrumb } from "@/interface/utils.interface";
 import { Button, Space } from "antd";
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
 
 const ItemLogInfo = () => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -87,7 +85,7 @@ const ItemLogInfo = () => {
       key: "action",
       width: 150,
       align: "center" as const,
-      render: (row: IItem) => (
+      render: () => (
         <Space size="middle">
           <Button
             className=" border-[#0174BE] text-[#0174BE] text-sm"
@@ -97,11 +95,6 @@ const ItemLogInfo = () => {
           >
             ตรวจสอบ
           </Button>
-          <Link to={`edit/${row.itemID}`}>
-            <Button className="border-[#0174BE] text-[#0174BE] text-sm">
-              แก้ไข
-            </Button>
-          </Link>
         </Space>
       ),
     },
