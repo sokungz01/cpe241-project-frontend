@@ -1,5 +1,6 @@
 import {
   CreateEmployee,
+  DeleteEmployee,
   GetEmployeeByID,
   UpdateEmployeeByID,
 } from "@/api/employee.api";
@@ -52,6 +53,21 @@ const AddEmployee = ({ isEdit }: { isEdit?: boolean }) => {
     },
   ];
   const { id } = useParams();
+
+  const handleDelete = async (id: number) => {
+    setLoading(true);
+    try {
+      const result = await DeleteEmployee(id);
+      if (result.status !== 200)
+        throw new Error("Error! Delte the data not success.");
+      setLoading(false);
+      SwalSuccess("สำเร็จ!", "ลบพนักงงานสำเร็จ").then(() => {
+        navigate("../");
+      });
+    } catch (err) {
+      setLoading(false);
+    }
+  };
 
   const fetchPositionData = async () => {
     try {
@@ -414,6 +430,10 @@ const AddEmployee = ({ isEdit }: { isEdit?: boolean }) => {
                     htmlType="button"
                     className="px-6"
                     size="middle"
+                    disabled={loading}
+                    onClick={async () => {
+                      await handleDelete(Number(id));
+                    }}
                     danger
                   >
                     ลบบัญชี
@@ -425,6 +445,7 @@ const AddEmployee = ({ isEdit }: { isEdit?: boolean }) => {
                       htmlType="button"
                       className="px-6 mx-2"
                       size="middle"
+                      disabled={loading}
                     >
                       ยกเลิก
                     </Button>

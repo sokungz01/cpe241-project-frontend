@@ -22,3 +22,9 @@ export async function UpdateEmployeeByID(userID: number, values: IEmployee) {
   const result = await axiosInstance.put(`/auth/update/${userID}`, values);
   return result;
 }
+
+export async function DeleteEmployee(userID: number) {
+  if (!userID) throw new Error("Error! invalid userID");
+  const result = await axiosInstance.delete(`/user/delete/${userID}`);
+  return result;
+}
