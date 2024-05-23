@@ -84,7 +84,6 @@ const CreateItemPage = ({ isEdit }: { isEdit?: boolean }) => {
       const result = await UpdateItem(Number(id), values);
       if (result.status !== 200)
         throw new Error("Error! Put the data not success.");
-      setLoading(false);
       SwalSuccess("สำเร็จ!", "แก้ไขข้อมูลอุปกรณ์สำเร็จ").then(() => {
         navigate("../");
       });
@@ -246,7 +245,7 @@ const CreateItemPage = ({ isEdit }: { isEdit?: boolean }) => {
                         min={0}
                         className=" w-full mt-2 text-sm h-8"
                         placeholder="จำนวนสินค้า"
-                        disabled={loading}
+                        disabled={loading || isEdit}
                       />
                     </Form.Item>
                   </div>
@@ -267,7 +266,7 @@ const CreateItemPage = ({ isEdit }: { isEdit?: boolean }) => {
                     </Button>
                   )}
                   <div className="flex justify-end w-full my-4">
-                    <Link to="../../">
+                    <Link to="../">
                       <Button
                         htmlType="button"
                         className="px-6 mx-2"

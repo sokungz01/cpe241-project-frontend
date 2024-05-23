@@ -5,3 +5,11 @@ export interface IItem {
   itemCost: number;
   qty: number;
 }
+
+export const initialItem = {
+  itemID: 0,
+  itemCategoryID: 0,
+  itemName: "string",
+  itemCost: 0,
+  qty: 0,
+};

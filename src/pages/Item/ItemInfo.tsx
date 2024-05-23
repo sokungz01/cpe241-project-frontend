@@ -2,7 +2,8 @@ import { GetAllItem } from "@/api/item.api";
 import { GetAllItemCategory } from "@/api/itemCategory.api";
 import BreadcrumbComponent from "@/components/BreadcrumbComponent/BreadcrumbComponent";
 import TableInfo from "@/components/Info/TableInfo";
-import { IItem } from "@/interface/item.interface";
+import AddQuantityModal from "@/components/Item/AddQuantityModal";
+import { IItem, initialItem } from "@/interface/item.interface";
 import { IItemCategory } from "@/interface/itemCategory.interface";
 import { IBreadcrumb } from "@/interface/utils.interface";
 import { Button, Space } from "antd";
@@ -13,6 +14,8 @@ const ItemInfo = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [itemData, setItemData] = useState<IItem[]>([]);
   const [itemCategory, setItemCategory] = useState<IItemCategory[]>([]);
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [selectedData, setSelectedData] = useState<IItem>(initialItem);
 
   const BreadCrumbLinks: IBreadcrumb[] = [
     {
@@ -89,10 +92,11 @@ const ItemInfo = () => {
           <Button
             className=" border-[#0174BE] text-[#0174BE] text-sm"
             onClick={() => {
-              alert("KUY");
+              setSelectedData(row);
+              setOpenModal(true);
             }}
           >
-            ตรวจสอบ
+            เพิ่มจำนวนสินค้า
           </Button>
           <Link to={`edit/${row.itemID}`}>
             <Button className="border-[#0174BE] text-[#0174BE] text-sm">
@@ -119,6 +123,12 @@ const ItemInfo = () => {
         columns={columns}
         dataSource={itemData}
         loading={loading}
+      />
+      <AddQuantityModal
+        data={selectedData}
+        itemCategory={itemCategory}
+        setOpen={setOpenModal}
+        open={openModal}
       />
     </div>
   );
