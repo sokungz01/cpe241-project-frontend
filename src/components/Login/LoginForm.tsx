@@ -13,7 +13,10 @@ const LoginForm = () => {
   const token: string | null = localStorage.getItem("accessToken") || null;
 
   useEffect(() => {
-    if (token) navigate("/tools/employee");
+    if (token !== null && token !== "") {
+      navigate("/tools/employee");
+      location.reload();
+    }
   });
 
   const onFinish = async () => {
@@ -25,11 +28,9 @@ const LoginForm = () => {
         throw new Error("Failed to login");
       }
       const token: string = response.data.token;
-
       localStorage.setItem("accessToken", token);
-      SwalSuccess("เข้าสู่ระบบสำเร็จ", "กำลังเปลี่ยนเส้นทาง").then(() => {
-        navigate("/tools/employee");
-      });
+
+      SwalSuccess("เข้าสู่ระบบสำเร็จ", "กำลังเปลี่ยนเส้นทาง");
       setIsLoading(false);
     } catch (err) {
       SwalError("เข้าสู่ระบบไม่สำเร็จ", "กรุณาลองใหม่ภายหลัง");
