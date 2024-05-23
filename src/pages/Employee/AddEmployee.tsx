@@ -12,6 +12,7 @@ import { IPosition } from "@/interface/position.interface";
 import { IBreadcrumb } from "@/interface/utils.interface";
 import { validateUpload } from "@/utils/imageUpload";
 import { SwalError, SwalSuccess } from "@/utils/swal";
+import { filterOption } from "@/utils/util";
 import { PictureOutlined } from "@ant-design/icons";
 import { Button, Form, Input, InputNumber, Select, Spin, Upload } from "antd";
 import ImgCrop from "antd-img-crop";
@@ -331,6 +332,7 @@ const AddEmployee = ({ isEdit }: { isEdit?: boolean }) => {
                       placeholder="ตำแหน่ง"
                       disabled={loading}
                       options={positionOption}
+                      filterOption={filterOption}
                     />
                   </Form.Item>
                 </div>

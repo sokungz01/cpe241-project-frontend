@@ -23,6 +23,7 @@ import CreatePositionPage from "./pages/Position/CreatePosition";
 import ReportInfo from "./pages/Report/ReportInfo";
 import SettingsInfo from "./pages/Settings/SettingsInfo";
 import CreateErrorTypePage from "./pages/ErrorType/CreateErrorTypePage";
+import ServiceRequest from "./pages/Report/ServiceRequest";
 
 const NavbarAndSidebar = () => {
   return (
@@ -118,6 +119,7 @@ function App() {
                   </Route>
                   <Route path="report">
                     <Route index element={<ReportInfo />} />
+                    <Route path="create" element={<ServiceRequest />} />
                   </Route>
                   <Route path="dashboard" element={<Dashboard />} />
                 </Route>
