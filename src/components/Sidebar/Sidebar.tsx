@@ -36,7 +36,7 @@ const Sidebar: React.FC = () => {
     {
       key: "2",
       icon: <FormOutlined />,
-      label: <Link to="/tools/fixReport">รายงานแจ้งซ่อม</Link>,
+      label: <Link to="/tools/report">รายงานแจ้งซ่อม</Link>,
     },
     {
       key: "3",

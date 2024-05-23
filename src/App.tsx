@@ -11,7 +11,7 @@ import { IEmployee } from "./interface/employee.interface";
 import Dashboard from "./pages/Dashboard";
 import AddEmployee from "./pages/Employee/AddEmployee";
 import EmployeeInfo from "./pages/Employee/EmployeeInfo";
-import FixReport from "./pages/FixReport";
+import CreateItemPage from "./pages/Item/CreateItemPage";
 import ItmeInfo from "./pages/Item/ItemInfo";
 import CreateItemCategoryPage from "./pages/ItemCategory/CreateItemCategoryPage";
 import ItemLogInfo from "./pages/ItemLog/ItemLogInfo";
@@ -20,8 +20,9 @@ import CreateMachinePage from "./pages/Machine/CreateMachine";
 import MachineInfo from "./pages/Machine/MachineInfo";
 import CreateMachineTypePage from "./pages/MachineType/CreateMachineTypePage";
 import CreatePositionPage from "./pages/Position/CreatePosition";
+import ReportInfo from "./pages/Report/ReportInfo";
 import SettingsInfo from "./pages/Settings/SettingsInfo";
-import CreateItemPage from "./pages/Item/CreateItemPage";
+import CreateErrorTypePage from "./pages/ErrorType/CreateErrorTypePage";
 
 const NavbarAndSidebar = () => {
   return (
@@ -107,8 +108,17 @@ function App() {
                         element={<CreateItemCategoryPage isEdit />}
                       />
                     </Route>
+                    <Route path="errortype">
+                      <Route path="create" element={<CreateErrorTypePage />} />
+                      <Route
+                        path="edit/:id"
+                        element={<CreateErrorTypePage isEdit />}
+                      />
+                    </Route>
                   </Route>
-                  <Route path="fixReport" element={<FixReport />} />
+                  <Route path="report">
+                    <Route index element={<ReportInfo />} />
+                  </Route>
                   <Route path="dashboard" element={<Dashboard />} />
                 </Route>
               </Route>

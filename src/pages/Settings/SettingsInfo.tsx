@@ -10,12 +10,15 @@ import { Button, Space } from "antd";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { IItemCategory } from "../../interface/itemCategory.interface";
+import { IErrorType } from "@/interface/errortype.interface";
+import { GetAllErrorType } from "@/api/errortype.api";
 
 const SettingsInfo = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [itemCategory, setItemCatagory] = useState<IItemCategory[]>([]);
   const [position, setPosition] = useState<IPosition[]>([]);
   const [machineType, setMachineType] = useState<IMachineType[]>([]);
+  const [errorType, setErrorType] = useState<IErrorType[]>([]);
 
   const BreadCrumbLinks: IBreadcrumb[] = [
     {
@@ -62,9 +65,25 @@ const SettingsInfo = () => {
       throw new Error("Error! Fetching data failed");
     }
   };
+  const fetchErrorType = async () => {
+    setLoading(true);
+    try {
+      const result = await GetAllErrorType();
+      setErrorType(result.data);
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+      throw new Error("Error! Fetching data failed");
+    }
+  };
 
   useMemo(() => {
-    Promise.all([fetchItemCategory(), fetchPosition(), fetchMachineType()]);
+    Promise.all([
+      fetchItemCategory(),
+      fetchPosition(),
+      fetchMachineType(),
+      fetchErrorType(),
+    ]);
   }, []);
 
   const columnsPosition = [
@@ -161,6 +180,34 @@ const SettingsInfo = () => {
     },
   ];
 
+  const columnsErrorType = [
+    {
+      title: "เลขหมวดหมู่ข้อผิดพลาด",
+      dataIndex: "errorTypeID",
+      key: "categoerrorTypeIDryID",
+    },
+    {
+      title: "หัวข้อข้อผิดพลาด",
+      key: "errorName",
+      dataIndex: "errorName",
+    },
+    {
+      title: "Action",
+      key: "action",
+      width: 150,
+      align: "center" as const,
+      render: (row: IErrorType) => (
+        <Space size="middle">
+          <Link to={`errortype/edit/${row.errorTypeID}`}>
+            <Button className="border-[#0174BE] text-[#0174BE] text-sm">
+              แก้ไข
+            </Button>
+          </Link>
+        </Space>
+      ),
+    },
+  ];
+
   return (
     <>
       <div className="w-full h-full bg-[#f0f2f5]">
@@ -193,6 +240,14 @@ const SettingsInfo = () => {
           titleBtn="เพิ่มประเภทอุปกรณ์"
           columns={columnsItemCategory}
           dataSource={itemCategory}
+          loading={loading}
+        />
+        <TableInfo
+          title="รายการทั้งหมด"
+          hrefBtn="errortype/create"
+          titleBtn="เพิ่มหมวดหมู่ข้อผิดพลาด"
+          columns={columnsErrorType}
+          dataSource={errorType}
           loading={loading}
         />
       </div>
