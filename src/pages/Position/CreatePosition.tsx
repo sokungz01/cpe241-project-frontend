@@ -128,10 +128,7 @@ const CreatePositionPage = ({ isEdit }: { isEdit?: boolean }) => {
               title="แก้ไขข้อมูลพนักงาน"
             />
           ) : (
-            <BreadcrumbComponent
-              links={BreadCrumbLinks}
-              title="เพิ่มพนักงาน"
-            />
+            <BreadcrumbComponent links={BreadCrumbLinks} title="เพิ่มพนักงาน" />
           )}
         </div>
         <Form

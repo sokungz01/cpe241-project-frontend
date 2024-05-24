@@ -62,7 +62,7 @@ const AddEmployee = ({ isEdit }: { isEdit?: boolean }) => {
       if (result.status !== 200)
         throw new Error("Error! Delte the data not success.");
       setLoading(false);
-      SwalSuccess("สำเร็จ!", "ลบพนักงงานสำเร็จ").then(() => {
+      SwalSuccess("สำเร็จ!", "ลบพนักงานสำเร็จ").then(() => {
         navigate("../");
       });
     } catch (err) {
@@ -131,7 +131,7 @@ const AddEmployee = ({ isEdit }: { isEdit?: boolean }) => {
     setLoading(true);
     try {
       if (!values.repassword.match(values.password)) {
-        SwalError("ผิดพลาด!", "รหัสผ่านไม่ตรงกัร!");
+        SwalError("ผิดพลาด!", "รหัสผ่านไม่ตรงกัน!");
         throw new Error("Password not match");
       }
 
