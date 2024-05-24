@@ -1,7 +1,6 @@
 // import { IPosition } from "@/interface/position.interface";
 import {
   CreatePosition,
-  DeletePosition,
   GetPositionByID,
   UpdatePosition,
 } from "@/api/position.api";
@@ -46,20 +45,20 @@ const CreatePositionPage = ({ isEdit }: { isEdit?: boolean }) => {
     },
   ];
 
-  const handleDelete = async (id: number) => {
-    setLoading(true);
-    try {
-      const result = await DeletePosition(id);
-      if (result.status !== 200)
-        throw new Error("Error! Delte the data not success.");
-      setLoading(false);
-      SwalSuccess("สำเร็จ!", "ลบตำแหน่งพนักงานสำเร็จ").then(() => {
-        navigate("../../");
-      });
-    } catch (err) {
-      setLoading(false);
-    }
-  };
+  // const handleDelete = async (id: number) => {
+  //   setLoading(true);
+  //   try {
+  //     const result = await DeletePosition(id);
+  //     if (result.status !== 200)
+  //       throw new Error("Error! Delte the data not success.");
+  //     setLoading(false);
+  //     SwalSuccess("สำเร็จ!", "ลบตำแหน่งพนักงานสำเร็จ").then(() => {
+  //       navigate("../../");
+  //     });
+  //   } catch (err) {
+  //     setLoading(false);
+  //   }
+  // };
 
   const onFinish = async (values: IPosition) => {
     setLoading(true);
@@ -126,12 +125,12 @@ const CreatePositionPage = ({ isEdit }: { isEdit?: boolean }) => {
           {isEdit ? (
             <BreadcrumbComponent
               links={EditBreadCrumbLinks}
-              title="แก้ไขข้อมูลเครื่องจักร"
+              title="แก้ไขข้อมูลพนักงาน"
             />
           ) : (
             <BreadcrumbComponent
               links={BreadCrumbLinks}
-              title="เพิ่มเครื่องจักร"
+              title="เพิ่มพนักงาน"
             />
           )}
         </div>
@@ -162,13 +161,13 @@ const CreatePositionPage = ({ isEdit }: { isEdit?: boolean }) => {
                       <Input
                         className=" w-full mt-2 text-sm h-8"
                         placeholder="ชื่อตำแหน่ง"
-                        disabled={loading}
+                        disabled
                       />
                     </Form.Item>
                   </div>
                   <div className=" flex flex-col w-full lg:w-1/2">
                     <Form.Item
-                      label="เงินเดือนประจำตัแหน่ง"
+                      label="เงินเดือนประจำตำแหน่ง"
                       name="positionSalary"
                       rules={[
                         {
@@ -182,14 +181,14 @@ const CreatePositionPage = ({ isEdit }: { isEdit?: boolean }) => {
                         step={0}
                         min={0}
                         className=" w-full mt-2 text-sm h-8"
-                        placeholder="เงินเดือนประจำตัแหน่ง "
+                        placeholder="เงินเดือนประจำตำแหน่ง "
                         disabled={loading}
                       />
                     </Form.Item>
                   </div>
                 </div>
                 <div className="w-full flex flex-row justify-between items-center">
-                  {isEdit && (
+                  {/* {isEdit && (
                     <Button
                       htmlType="button"
                       className="px-6"
@@ -202,7 +201,7 @@ const CreatePositionPage = ({ isEdit }: { isEdit?: boolean }) => {
                     >
                       {loading ? <Spin /> : "ลบตำแหน่ง"}
                     </Button>
-                  )}
+                  )} */}
                   <div className="flex justify-end w-full my-4">
                     <Link to="../../">
                       <Button
