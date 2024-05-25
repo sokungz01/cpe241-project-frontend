@@ -1,5 +1,5 @@
 import { AuthContext } from "@/context/auth.context";
-import { Button, ConfigProvider, Select } from "antd";
+import { Button, Select } from "antd";
 import { useContext } from "react";
 
 const ReportStatusBar = ({
@@ -62,8 +62,9 @@ const ReportStatusBar = ({
 
   const disableByStatus = [3, 4, 5];
   const closeCaseOptions = [
-    { value: 1, label: "เรียบร้อย" },
-    { value: 2, label: "ไม่สามารถซ่อมได้" },
+    { value: 1, label: "ซ่อมสำเร็จ" },
+    { value: 2, label: "ปฏิเสธคำร้อง" },
+    { value: 3, label: "ไม่สามารถซ่อมได้" },
   ];
 
   return (
