@@ -4,6 +4,7 @@ export interface IItem {
   itemName: string;
   itemCost: number;
   qty: number;
+  staffID: number;
 }
 
 export const initialItem = {
@@ -12,4 +13,5 @@ export const initialItem = {
   itemName: "string",
   itemCost: 0,
   qty: 0,
+  staffID: 0,
 };

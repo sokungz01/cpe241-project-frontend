@@ -6,16 +6,18 @@ import {
 } from "@/api/item.api";
 import { GetAllItemCategory } from "@/api/itemCategory.api";
 import BreadcrumbComponent from "@/components/BreadcrumbComponent/BreadcrumbComponent";
+import { AuthContext } from "@/context/auth.context";
 import { IItem } from "@/interface/item.interface";
 import { IItemCategory } from "@/interface/itemCategory.interface";
 import { IBreadcrumb, Option } from "@/interface/utils.interface";
 import { SwalSuccess } from "@/utils/swal";
 import { Button, Form, Input, InputNumber, Select, Spin } from "antd";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useContext, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 const CreateItemPage = ({ isEdit }: { isEdit?: boolean }) => {
   const [form] = Form.useForm();
+  const auth = useContext(AuthContext);
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
   const [itemCategory, setItemCategory] = useState<Option[]>([]);
@@ -59,8 +61,7 @@ const CreateItemPage = ({ isEdit }: { isEdit?: boolean }) => {
     setLoading(true);
     try {
       values.itemCategoryID = Number(values.itemCategoryID);
-
-      console.log(values);
+      values.staffID = Number(auth?.authContext.id);
       const result = await CreateItem(values);
       if (result.status !== 200)
         throw new Error("Error! Post the data not success.");
@@ -77,6 +78,7 @@ const CreateItemPage = ({ isEdit }: { isEdit?: boolean }) => {
     setLoading(true);
     try {
       if (!id || Number(id) === 0) throw new Error("Error! invalid machine id");
+      values.staffID = Number(auth?.authContext.id);
       values.itemID = Number(id);
       values.itemCost = Number(values.itemCost);
       values.itemCategoryID = Number(values.itemCategoryID);
