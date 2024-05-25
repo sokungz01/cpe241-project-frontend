@@ -10,7 +10,7 @@ import { IMachine } from "@/interface/machine.interface";
 import { IMachineType } from "@/interface/machinetype.interface";
 import { IBreadcrumb, Option } from "@/interface/utils.interface";
 import { SwalSuccess } from "@/utils/swal";
-import { Button, DatePicker, Form, Input, Select, Spin } from "antd";
+import { Button, DatePicker, Form, Input, Select, Spin, Switch } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import dayjs from "dayjs";
 import { useCallback, useMemo, useState } from "react";
@@ -126,6 +126,7 @@ const CreateMachinePage = ({ isEdit }: { isEdit?: boolean }) => {
     try {
       if (!id || Number(id) === 0) throw new Error("Error! invalid machine id");
       values.machineTypeID = Number(values.machineTypeID);
+      values.status = values.status ? 1 : 0;
       const result = await UpdateMachineByID(Number(id), values);
       if (result.status !== 200)
         throw new Error("Error! Put the data not success.");
@@ -160,8 +161,18 @@ const CreateMachinePage = ({ isEdit }: { isEdit?: boolean }) => {
       >
         <div className="flex flex-col lg:flex-row px-6 gap-4 mt-6">
           <div className=" bg-white w-full  rounded-md px-6">
-            <div className="mt-6">
+            <div className="mt-6 flex flex-row items-center">
               <p className=" text-md font-medium">ข้อมูลเครื่องจักร</p>
+              <div className="ml-auto flex items-center">
+                <p className=" px-3 text-center">สถานะเครื่องจักร :</p>
+                <Form.Item name="status">
+                  <Switch
+                    className="bg-unavailable"
+                    checkedChildren="เปิดใช้งาน"
+                    unCheckedChildren="ปิดใช้งาน"
+                  />
+                </Form.Item>
+              </div>
             </div>
 
             <div className="flex flex-col gap-y-4 mt-4">
