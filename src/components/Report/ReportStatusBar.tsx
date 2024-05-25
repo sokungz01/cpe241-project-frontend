@@ -49,7 +49,7 @@ const ReportStatusBar = ({
               ยกเลิกคำร้อง
             </Button>
           )}
-          {Auth?.authContext.positionID === 2 && (
+          {Auth?.authContext.positionID !== 1 && (
             <Select
               disabled={disableByStatus.includes(status)}
               size="middle"
