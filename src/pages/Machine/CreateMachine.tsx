@@ -227,7 +227,7 @@ const CreateMachinePage = ({ isEdit }: { isEdit?: boolean }) => {
                 </div>
                 <div className=" flex flex-col w-full lg:w-1/2">
                   <Form.Item
-                    label="วันที่่เริ่มใช้งาน"
+                    label="วันที่เริ่มใช้งาน"
                     name="startDate"
                     rules={[
                       {
@@ -238,7 +238,7 @@ const CreateMachinePage = ({ isEdit }: { isEdit?: boolean }) => {
                   >
                     <DatePicker
                       className=" w-full mt-2 text-sm h-8"
-                      placeholder="วันที่่เริ่มใช้งาน"
+                      placeholder="วันที่เริ่มใช้งาน"
                       disabled={loading}
                       format={"DD-MM-YYYY"}
                     />

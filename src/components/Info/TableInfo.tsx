@@ -32,7 +32,7 @@ const TableInfo = ({
                 <Button
                   onClick={onClick}
                   type="primary"
-                  className="bg-[#0174BE] text-white flex text-sm py-3 align-middle items-center"
+                  className="bg-[#0174BE] h-9 text-white flex text-sm py-3 align-middle items-center"
                 >
                   {titleBtn}
                 </Button>

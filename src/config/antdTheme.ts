@@ -24,5 +24,8 @@ export const theme: ThemeConfig = {
     Table: {
       cellFontSize: 15,
     },
+    DatePicker: {
+      fontSize: 14,
+    },
   },
 };

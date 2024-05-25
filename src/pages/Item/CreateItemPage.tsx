@@ -182,7 +182,7 @@ const CreateItemPage = ({ isEdit }: { isEdit?: boolean }) => {
                     >
                       <Input
                         className=" w-full mt-2 text-sm h-8"
-                        placeholder="ชื่อตำแหน่ง"
+                        placeholder="ชื่ออุปกรณ์"
                         disabled={loading}
                       />
                     </Form.Item>
@@ -280,7 +280,7 @@ const CreateItemPage = ({ isEdit }: { isEdit?: boolean }) => {
                     </Link>
                     <Button
                       htmlType="submit"
-                      className="px-6 bg-primary text-white"
+                      className="px-6 bg-primary text-white border-primary"
                       size="middle"
                       disabled={loading}
                     >
