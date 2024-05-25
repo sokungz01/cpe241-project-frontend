@@ -47,7 +47,7 @@ const ServiceResponse = () => {
         requestForm.setFieldsValue(serviceData);
         requestForm.setFieldValue(
           "machineID",
-          serviceData.machineID.toString()
+          serviceData.machineID.toString(),
         );
 
         const errorLog: IErrorlog[] = serviceData.errorLog.map((item) => {
@@ -60,7 +60,7 @@ const ServiceResponse = () => {
         requestForm.setFieldValue("errorLog", errorLog);
         requestForm.setFieldValue(
           "createdDate",
-          dayjs(serviceData.createdDate)
+          dayjs(serviceData.createdDate),
         );
 
         setLoading(false);
@@ -69,7 +69,7 @@ const ServiceResponse = () => {
         throw new Error("Error! Fetching data failed.");
       }
     },
-    [requestForm, setLoading]
+    [requestForm, setLoading],
   );
 
   const fetchServiceResponse = useCallback(async (serviceID: number) => {
