@@ -99,7 +99,14 @@ const ServiceResponse = () => {
         <div className="flex flex-col">
           <BreadcrumbComponent links={BreadCrumbLinks} title="เพิ่มรายงาน" />
         </div>
-        <ReportStatusBar status={requestForm.getFieldValue("statusID")} />
+        <ReportStatusBar
+          status={requestForm.getFieldValue("statusID")}
+          userID={requestForm.getFieldValue("employeeID")}
+          isResponse={
+            responseData?.serviceResponse != undefined &&
+            responseData?.serviceResponse.length > 0
+          }
+        />
         <ServiceRequestForm loading={loading} form={requestForm} disabled />
         <ResponseSection loading={loading} data={responseData!} />
         {auth?.authContext.positionID != 1 && (
