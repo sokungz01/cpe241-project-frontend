@@ -91,7 +91,7 @@ const ServiceRequestForm = ({
               <div className=" flex flex-col w-full lg:w-1/2">
                 <Form.Item label="วันที่รายงาน" name="createdDate">
                   <DatePicker
-                    className=" w-full mt-2 text-sm placeholder:text-sm"
+                    className=" w-full mt-2 text-sm placeholder:text-sm h-8"
                     placeholder="เครื่องจักรที่ต้องการจะรายงาน"
                     disabled
                     defaultValue={dayjs()}
@@ -173,7 +173,7 @@ const ServiceRequestForm = ({
                                 />
                               </Form.Item>
                             </div>
-                            <div className="w-full">
+                            <div className="w-full mt-4">
                               <Form.Item
                                 label="รายละเอียดปัญหา"
                                 name={[item.name, "errorDescription"]}

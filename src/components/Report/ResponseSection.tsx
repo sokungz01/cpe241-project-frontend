@@ -23,7 +23,10 @@ const ResponseSection = ({
               {data.length > 0 ? (
                 <>
                   {data.map((item, index) => {
-                    return <ResponseCard data={item} index={index + 1} />;
+                    return (
+                      <div className="mt-6">
+                        <ResponseCard data={item} index={index + 1} />
+                      </div>)
                   })}
                 </>
               ) : (

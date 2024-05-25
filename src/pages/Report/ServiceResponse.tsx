@@ -124,7 +124,7 @@ const ServiceResponse = () => {
         throw new Error("Error! Cannot post the data");
       }
 
-      SwalSuccess("สำเร็จ", "เพิ่มผลรายงงานการแจ้งซ่อม").then(() => {
+      SwalSuccess("สำเร็จ", "เพิ่มผลรายงานการแจ้งซ่อม").then(() => {
         navigate("../");
       });
     } catch (error) {
