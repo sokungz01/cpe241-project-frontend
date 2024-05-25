@@ -1,5 +1,19 @@
-import { ISerivceRequest } from "@/interface/servicerequest.interface";
-import { Button, Form, FormInstance, Input, Spin } from "antd";
+import { GetAllItem } from "@/api/item.api";
+import { IItem } from "@/interface/item.interface";
+import { IServiceResponse } from "@/interface/serviceresponse.interface";
+import { Option } from "@/interface/utils.interface";
+import { filterOption } from "@/utils/util";
+import {
+  Button,
+  Form,
+  FormInstance,
+  Input,
+  InputNumber,
+  Select,
+  Spin,
+} from "antd";
+import TextArea from "antd/es/input/TextArea";
+import { useMemo, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
 import { Link } from "react-router-dom";
 
@@ -11,9 +25,36 @@ const ServiceResponseForm = ({
 }: {
   form: FormInstance;
   loading: boolean;
-  onFinish?: (values: ISerivceRequest) => Promise<void>;
+  onFinish?: (values: IServiceResponse) => Promise<void>;
   disabled?: boolean;
 }) => {
+  const [itemData, setItemData] = useState<Option[]>([]);
+
+  const fetchItemData = async () => {
+    try {
+      const result = await GetAllItem();
+      if (result.status !== 200) {
+        throw new Error("Error! Cannot fetching data");
+      }
+      const mapOption: Option[] = [];
+      const data: IItem[] = result.data;
+      data.forEach(async (item) => {
+        mapOption.push({
+          label: item.itemName,
+          value: String(item.itemID),
+        });
+      });
+
+      setItemData(mapOption);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useMemo(async () => {
+    await fetchItemData();
+  }, []);
+
   return (
     <Form form={form} layout="vertical" onFinish={onFinish}>
       <div className="flex flex-col lg:flex-row px-6 gap-4 mt-6">
@@ -26,69 +67,127 @@ const ServiceResponseForm = ({
             <section className="mt-8">
               <h4 className="font-semibold text-md"> รายงาน </h4>
               <hr className="my-4" />
-              <Form.List name="errorLog">
-                {(items, itemOptions) => (
-                  <div>
-                    {items.map((item) => (
-                      <div className="w-full my-4 flex flex-row gap-x-4 items-end">
-                        <div className="w-1/3">
-                          <Form.Item
-                            label="หัวข้อ"
-                            name={[item.name, "title"]}
-                            rules={[
-                              {
-                                required: true,
-                                message: "Please input title!",
-                              },
-                            ]}
+              <div className="w-full my-4 flex flex-col gap-x-4 items-end">
+                <div className="w-full">
+                  <Form.Item
+                    label="หัวข้อ"
+                    name={"title"}
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input title!",
+                      },
+                    ]}
+                  >
+                    <Input
+                      placeholder="หัวข้อ"
+                      className=" w-full mt-2 text-sm h-8"
+                      disabled={loading || disabled}
+                    />
+                  </Form.Item>
+                </div>
+                <div className="w-full">
+                  <Form.Item
+                    label="รายละเอียดปัญหา"
+                    name={"description"}
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your description!",
+                      },
+                    ]}
+                  >
+                    <TextArea
+                      showCount
+                      placeholder="รายละเอียดเครื่องจักร"
+                      className="w-full my-4 text-sm h-24"
+                      style={{ resize: "none" }}
+                      disabled={loading || disabled}
+                    />
+                  </Form.Item>
+                </div>
+                <div className="w-full">
+                  <Form.List name={"maintenancePart"}>
+                    {(parts, partOptions) => (
+                      <div>
+                        {parts.length > 0 && (
+                          <p className="font-semibold">อุปกรณ์ที่ใช้</p>
+                        )}
+                        {parts.map((part) => (
+                          <div className="w-full bg-gray-50 rounded-xl p-4 my-4 flex flex-row gap-x-4 items-end">
+                            <div className="w-1/2">
+                              <Form.Item
+                                label="อุปกรณ์ที่ใช้"
+                                name={[part.name, "itemID"]}
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: "Please input your item!",
+                                  },
+                                ]}
+                              >
+                                <Select
+                                  showSearch
+                                  className=" w-full mt-2 text-sm placeholder:text-sm"
+                                  placeholder="อุปกรณ์ที่ใช้"
+                                  disabled={loading || disabled}
+                                  options={itemData}
+                                  filterOption={filterOption}
+                                />
+                              </Form.Item>
+                            </div>
+                            <div className="w-1/2">
+                              <Form.Item
+                                label="จำนวนที่ใช้"
+                                name={[part.name, "qty"]}
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: "Please input your quantity!",
+                                  },
+                                ]}
+                              >
+                                <InputNumber
+                                  min={0}
+                                  step={0}
+                                  controls={false}
+                                  placeholder="จำนวนที่ใช้"
+                                  className=" w-full mt-2 text-sm h-8"
+                                  disabled={loading || disabled}
+                                />
+                              </Form.Item>
+                            </div>
+                            {!disabled && (
+                              <RxCross2
+                                className="size-8"
+                                onClick={() => {
+                                  partOptions.remove(part.name);
+                                }}
+                              />
+                            )}
+                          </div>
+                        ))}
+                        {!disabled && (
+                          <Button
+                            type="dashed"
+                            className="my-2"
+                            onClick={() =>
+                              partOptions.add({
+                                itemID: null,
+                                qty: null,
+                              })
+                            }
+                            block
                           >
-                            <Input
-                              placeholder="หัวข้อ"
-                              className=" w-full mt-2 text-sm h-8"
-                              disabled={loading || disabled}
-                            />
-                          </Form.Item>
-                        </div>
-                        <div className="w-full">
-                          <Form.Item
-                            label="รายละเอียดปัญหา"
-                            name={[item.name, "Description"]}
-                            rules={[
-                              {
-                                required: true,
-                                message: "Please input your description!",
-                              },
-                            ]}
-                          >
-                            <Input
-                              placeholder="รายละเอียดปัญหา"
-                              className=" w-full mt-2 text-sm h-8"
-                              disabled={loading || disabled}
-                            />
-                          </Form.Item>
-                        </div>
-                        {items.length > 1 && !disabled && (
-                          <RxCross2
-                            className="size-8"
-                            onClick={() => {
-                              itemOptions.remove(item.name);
-                            }}
-                          />
+                            + เพิ่มอุปกรณ์ที่เบิก
+                          </Button>
                         )}
                       </div>
-                    ))}
-                    {!disabled && (
-                      <Button
-                        type="dashed"
-                        onClick={() => itemOptions.add({})}
-                        block
-                      >
-                        + เพิ่มการรายงาน
-                      </Button>
                     )}
-                  </div>
-                )}
-              </Form.List>
+                  </Form.List>
+                </div>
+                <hr className="w-full my-4" />
+              </div>
             </section>
           </div>
           <div className="w-full flex flex-row justify-between items-center">

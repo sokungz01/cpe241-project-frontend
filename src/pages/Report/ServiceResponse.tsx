@@ -1,24 +1,30 @@
 import { GetServiceRequestByID } from "@/api/servicerequest.api";
-import { GetServiceResponseByServiceID } from "@/api/serviceresponse.api";
+import {
+  CreateServiceResponse,
+  GetServiceResponseByServiceID,
+} from "@/api/serviceresponse.api";
 import BreadcrumbComponent from "@/components/BreadcrumbComponent/BreadcrumbComponent";
 import ServiceRequestForm from "@/components/Report/ServiceRequestForm";
 import ServiceResponseForm from "@/components/Report/ServiceResponseForm";
 import { AuthContext } from "@/context/auth.context";
 import { IErrorlog } from "@/interface/errorlog.interface";
+import { IMaintenanceParts } from "@/interface/maintenanceparts.interface";
 import { ISerivceRequest } from "@/interface/servicerequest.interface";
-import { IServiceResponseGroup } from "@/interface/serviceresponse.interface";
+import { IServiceResponse } from "@/interface/serviceresponse.interface";
 import { IBreadcrumb } from "@/interface/utils.interface";
+import { SwalError, SwalSuccess } from "@/utils/swal";
 import { Form } from "antd";
 import dayjs from "dayjs";
 import { useCallback, useContext, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ResponseSection from "../../components/Report/ResponseSection";
 
 const ServiceResponse = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const auth = useContext(AuthContext);
   const [requestForm] = Form.useForm();
-  const [responseData, setResponseData] = useState<IServiceResponseGroup>();
+  const [responseData, setResponseData] = useState<IServiceResponse[]>();
   const [responseForm] = Form.useForm();
   const [loading, setLoading] = useState<boolean>(false);
   const BreadCrumbLinks: IBreadcrumb[] = [
@@ -61,11 +67,10 @@ const ServiceResponse = () => {
           "createdDate",
           dayjs(serviceData.createdDate),
         );
-
-        setLoading(false);
       } catch (err) {
-        setLoading(false);
         throw new Error("Error! Fetching data failed.");
+      } finally {
+        setLoading(false);
       }
     },
     [requestForm, setLoading],
@@ -77,9 +82,7 @@ const ServiceResponse = () => {
       if (!serviceID || serviceID === 0)
         throw new Error("Error! Invalid serviceID");
       const result = await GetServiceResponseByServiceID(serviceID);
-      const serviceData: IServiceResponseGroup = {
-        serviceResponse: result.data,
-      };
+      const serviceData: IServiceResponse[] = result.data;
       setResponseData(serviceData);
     } catch (err) {
       throw new Error("Error! Fetching data failed.");
@@ -92,6 +95,43 @@ const ServiceResponse = () => {
     await fetchServiceRequest(Number(id));
     await fetchServiceResponse(Number(id));
   }, [id, fetchServiceRequest, fetchServiceResponse]);
+
+  const onFinish = async (values: IServiceResponse) => {
+    setLoading(true);
+    try {
+      values.createdDate = new Date();
+      values.updateDate = new Date();
+      values.staffID = auth!.authContext.id;
+      values.requestedServiceID = Number(id);
+      if (values.maintenancePart == undefined || values.maintenancePart == null)
+        values.maintenancePart = [];
+
+      const elemMaintenanace: IMaintenanceParts[] = values.maintenancePart.map(
+        (elem: IMaintenanceParts) => {
+          elem.itemID = Number(elem.itemID);
+          elem.qty = Number(elem.qty);
+          return elem;
+        },
+      );
+
+      values.maintenancePart = elemMaintenanace;
+      console.log(values);
+      const result = await CreateServiceResponse(values);
+
+      if (result.status !== 200) {
+        SwalError("เกิดข้อผิดพลาด", "ไม่สามารถสร้างรายงานปัญหาได้");
+        throw new Error("Error! Cannot post the data");
+      }
+
+      SwalSuccess("สำเร็จ", "เพิ่มผลรายงงานการแจ้งซ่อม").then(() => {
+        navigate("../");
+      });
+    } catch (error) {
+      throw new Error("Error! cannot post the response data");
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <>
       <div className="w-full h-full bg-[#f0f2f5]">
@@ -101,9 +141,15 @@ const ServiceResponse = () => {
 
         <ServiceRequestForm loading={loading} form={requestForm} disabled />
         <ResponseSection loading={loading} data={responseData!} />
-        {auth?.authContext.positionID != 1 && (
-          <ServiceResponseForm loading={loading} form={responseForm} />
-        )}
+        {auth?.authContext.positionID != 1 &&
+          (requestForm.getFieldValue("statusID") === 1 ||
+            requestForm.getFieldValue("statusID") === 2) && (
+            <ServiceResponseForm
+              loading={loading}
+              form={responseForm}
+              onFinish={onFinish}
+            />
+          )}
       </div>
     </>
   );

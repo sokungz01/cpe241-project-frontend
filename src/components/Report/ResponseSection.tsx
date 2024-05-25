@@ -1,4 +1,4 @@
-import { IServiceResponseGroup } from "@/interface/serviceresponse.interface";
+import { IServiceResponse } from "@/interface/serviceresponse.interface";
 import { Spin } from "antd";
 import ResponseCard from "./ResponseCard";
 
@@ -6,7 +6,7 @@ const ResponseSection = ({
   data,
   loading,
 }: {
-  data: IServiceResponseGroup;
+  data: IServiceResponse[];
   loading: boolean;
 }) => {
   return (
@@ -20,9 +20,9 @@ const ResponseSection = ({
             </div>
           ) : (
             <div className="my-4">
-              {data.serviceResponse.length > 0 ? (
+              {data.length > 0 ? (
                 <>
-                  {data.serviceResponse.map((item, index) => {
+                  {data.map((item, index) => {
                     return <ResponseCard data={item} index={index + 1} />;
                   })}
                 </>
