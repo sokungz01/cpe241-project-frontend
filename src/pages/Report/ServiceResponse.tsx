@@ -13,6 +13,7 @@ import dayjs from "dayjs";
 import { useCallback, useContext, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import ResponseSection from "../../components/Report/ResponseSection";
+import ReportStatusBar from "@/components/Report/ReportStatusBar";
 
 const ServiceResponse = () => {
   const { id } = useParams();
@@ -46,7 +47,7 @@ const ServiceResponse = () => {
         requestForm.setFieldsValue(serviceData);
         requestForm.setFieldValue(
           "machineID",
-          serviceData.machineID.toString(),
+          serviceData.machineID.toString()
         );
 
         const errorLog: IErrorlog[] = serviceData.errorLog.map((item) => {
@@ -59,7 +60,7 @@ const ServiceResponse = () => {
         requestForm.setFieldValue("errorLog", errorLog);
         requestForm.setFieldValue(
           "createdDate",
-          dayjs(serviceData.createdDate),
+          dayjs(serviceData.createdDate)
         );
 
         setLoading(false);
@@ -68,7 +69,7 @@ const ServiceResponse = () => {
         throw new Error("Error! Fetching data failed.");
       }
     },
-    [requestForm, setLoading],
+    [requestForm, setLoading]
   );
 
   const fetchServiceResponse = useCallback(async (serviceID: number) => {
@@ -98,7 +99,7 @@ const ServiceResponse = () => {
         <div className="flex flex-col">
           <BreadcrumbComponent links={BreadCrumbLinks} title="เพิ่มรายงาน" />
         </div>
-
+        <ReportStatusBar status={requestForm.getFieldValue("statusID")} />
         <ServiceRequestForm loading={loading} form={requestForm} disabled />
         <ResponseSection loading={loading} data={responseData!} />
         {auth?.authContext.positionID != 1 && (
