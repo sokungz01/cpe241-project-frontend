@@ -10,8 +10,6 @@ export default {
         primary: "#1890FF",
         bg: "#E6F1F9",
         blue_header: "#003150",
-
-        warning: "yellow-500",
         success: "#52C41A",
         danger: "#FF4D4F",
         unavailable: "#808080",
