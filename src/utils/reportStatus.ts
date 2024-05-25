@@ -43,3 +43,25 @@ export const handleReportStatus = (statusID: number) => {
     }
   }
 };
+
+export const handleMachineStatus = (statusID: number) => {
+  const statusObj = {
+    statusColor: "",
+    statusTextColor: "",
+    statusName: "",
+  };
+  switch (statusID) {
+    case 0: {
+      statusObj.statusColor = "bg-red-500";
+      statusObj.statusTextColor = "text-red-500";
+      statusObj.statusName = "หยุดทำงาน";
+      return statusObj;
+    }
+    case 1: {
+      statusObj.statusColor = "bg-green-500";
+      statusObj.statusTextColor = "text-green-500";
+      statusObj.statusName = "กำลังใช้งาน";
+      return statusObj;
+    }
+  }
+};

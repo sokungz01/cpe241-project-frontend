@@ -5,6 +5,7 @@ import TableInfo from "@/components/Info/TableInfo";
 import { IMachine } from "@/interface/machine.interface";
 import { IMachineType } from "@/interface/machinetype.interface";
 import { IBreadcrumb } from "@/interface/utils.interface";
+import { handleMachineStatus } from "@/utils/reportStatus";
 import { Button, Space } from "antd";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
@@ -75,8 +76,24 @@ const MachineInfo = () => {
     },
     {
       title: "สถานะเครื่องจักร",
-      dataIndex: "status",
       key: "status",
+      sorter: (a: IMachine, b: IMachine) => a.status - b.status,
+      render: (row: IMachine) => {
+        return (
+          <>
+            <div className=" flex flex-row items-center">
+              <div
+                className={`flex size-3 ${handleMachineStatus(row.status)?.statusColor} rounded-full`}
+              ></div>
+              <p
+                className={`text-md px-2 ${handleMachineStatus(row.status)?.statusTextColor}`}
+              >
+                {handleMachineStatus(row.status)?.statusName}
+              </p>
+            </div>
+          </>
+        );
+      },
     },
     {
       title: "วันที่เริ่มใช้งาน",
