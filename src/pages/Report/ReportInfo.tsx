@@ -1,12 +1,53 @@
+import { GetAllMaintenanceStatus } from "@/api/maintenanceStatus.api";
+import { GetAllServiceRequest } from "@/api/servicerequest.api";
 import BreadcrumbComponent from "@/components/BreadcrumbComponent/BreadcrumbComponent";
 import TableInfo from "@/components/Info/TableInfo";
-import { IMachine } from "@/interface/machine.interface";
+import { IEmployee } from "@/interface/employee.interface";
+import { IMaintenanceStatus } from "@/interface/maintenanceStatus.interface";
+import { ISerivceRequest } from "@/interface/servicerequest.interface";
 import { IBreadcrumb } from "@/interface/utils.interface";
+import { convertDateToString } from "@/utils/util";
 import { Button, Space } from "antd";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const ReportInfo = () => {
-  //   const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [serviceRequestData, setServiceRequestData] = useState<
+    ISerivceRequest[]
+  >([]);
+  const [maintenanceStatus, setMaintenanceStatus] = useState<
+    IMaintenanceStatus[]
+  >([]);
+
+  const fetchServiceRequest = async () => {
+    setLoading(true);
+    try {
+      const result = await GetAllServiceRequest();
+      console.log(result.data);
+      setServiceRequestData(result.data);
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+      throw new Error("Error! Fetching data failed");
+    }
+  };
+
+  const fetchMaintenanceStatus = async () => {
+    setLoading(true);
+    try {
+      const result = await GetAllMaintenanceStatus();
+      setMaintenanceStatus(result.data);
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+      throw new Error("Error! Fetching data failed");
+    }
+  };
+
+  useEffect(() => {
+    Promise.all([fetchServiceRequest(), fetchMaintenanceStatus()]);
+  }, []);
 
   const BreadCrumbLinks: IBreadcrumb[] = [
     {
@@ -20,41 +61,56 @@ const ReportInfo = () => {
 
   const columns = [
     {
-      title: "รหัสเครื่องจักร",
-      dataIndex: "machineID",
-      key: "machineID",
+      title: "เลขที่รายงาน",
+      dataIndex: "serviceID",
+      key: "serviceID",
+      render: (record: number) => {
+        return record.toString().padStart(6, "0");
+      },
     },
     {
       title: "ชื่อเครื่องจักร",
-      dataIndex: "machineName",
       key: "machineName",
+      render: (row: ISerivceRequest) => {
+        return row.machine.machineName;
+      },
     },
     {
-      title: "ยี่ห้อ",
-      dataIndex: "machineBrand",
-      key: "machineBrand",
+      title: "สถานะการรายงาน",
+      dataIndex: "statusID",
+      key: "statusID",
+      render: (row: number) => {
+        return maintenanceStatus.find((item) => item.statusID === row)
+          ?.statusName;
+      },
     },
     {
-      title: "สถานะเครื่องจักร",
-      dataIndex: "status",
-      key: "status",
-    },
-    {
-      title: "วันที่เริ่มใช้งาน",
-      dataIndex: "startDate",
-      key: "startDate",
-      render: (record: Date) => {
-        const date = new Date(record);
-        const day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
-        const month =
-          date.getMonth() + 1 < 10
-            ? "0" + (date.getMonth() + 1)
-            : date.getMonth() + 1;
-        const year = date.getFullYear();
+      title: "วันที่รายงานปัญหา",
+      key: "createdDate",
+      render: (row: ISerivceRequest) => {
+        const createDate = convertDateToString(row.createdDate);
+        let date = new Date();
+        if (row.updateDate?.Time) date = new Date(row.updateDate.Time);
+        const updateDate = convertDateToString(date);
         return (
           <div className="w-full content-center">
-            {day}-{month}-{year}
+            {createDate}
+            {row.updateDate != null && (
+              <p className="text-xs">แก้ไขล่าสุด {updateDate}</p>
+            )}
           </div>
+        );
+      },
+    },
+    {
+      title: "ผู้รายงาน",
+      key: "user",
+      dataIndex: "user",
+      render: (row: IEmployee) => {
+        return (
+          row.name.toLocaleUpperCase() +
+          " " +
+          row.surname.substring(0, 4).toLocaleUpperCase()
         );
       },
     },
@@ -63,19 +119,11 @@ const ReportInfo = () => {
       key: "action",
       width: 150,
       align: "center" as const,
-      render: (row: IMachine) => (
+      render: (row: ISerivceRequest) => (
         <Space size="middle">
-          <Button
-            className=" border-[#0174BE] text-[#0174BE] text-sm"
-            onClick={() => {
-              alert("KUY");
-            }}
-          >
-            ตรวจสอบ
-          </Button>
-          <Link to={`edit/${row.machineID}`}>
-            <Button className="border-[#0174BE] text-[#0174BE] text-sm">
-              แก้ไข
+          <Link to={`response/${row.serviceID}`}>
+            <Button className=" border-[#0174BE] text-[#0174BE] text-sm">
+              แจ้งรายงาน
             </Button>
           </Link>
         </Space>
@@ -97,10 +145,8 @@ const ReportInfo = () => {
         hrefBtn="create"
         titleBtn="เพิ่มรายงาน"
         columns={columns}
-        dataSource={[]}
-        loading
-        // dataSource={machineData}
-        // loading={loading}∏
+        dataSource={serviceRequestData}
+        loading={loading}
       />
     </div>
   );
