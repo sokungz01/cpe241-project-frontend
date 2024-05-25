@@ -220,8 +220,6 @@ const SettingsInfo = () => {
 
         <TableInfo
           title="รายการทั้งหมด"
-          titleBtn="เพิ่มตำแหน่ง"
-          hrefBtn="position/create"
           columns={columnsPosition}
           dataSource={position}
           loading={loading}
