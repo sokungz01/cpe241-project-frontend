@@ -46,7 +46,7 @@ const ServiceRequest = () => {
       });
 
       const result = await CreateServiceRequest(values);
-
+      console.log(result);
       if (result.status !== 200) {
         SwalError("เกิดข้อผิดพลาด", result.data);
         throw new Error("Error! Data cannot post the data");
