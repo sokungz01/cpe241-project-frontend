@@ -26,7 +26,8 @@ const ResponseSection = ({
                     return (
                       <div className="mt-6">
                         <ResponseCard data={item} index={index + 1} />
-                      </div>)
+                      </div>
+                    );
                   })}
                 </>
               ) : (
