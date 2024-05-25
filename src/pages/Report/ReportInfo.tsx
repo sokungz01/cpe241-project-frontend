@@ -1,11 +1,10 @@
-import { GetAllMaintenanceStatus } from "@/api/maintenanceStatus.api";
 import { GetAllServiceRequest } from "@/api/servicerequest.api";
 import BreadcrumbComponent from "@/components/BreadcrumbComponent/BreadcrumbComponent";
 import TableInfo from "@/components/Info/TableInfo";
 import { IEmployee } from "@/interface/employee.interface";
-import { IMaintenanceStatus } from "@/interface/maintenanceStatus.interface";
 import { ISerivceRequest } from "@/interface/servicerequest.interface";
 import { IBreadcrumb } from "@/interface/utils.interface";
+import { handleReportStatus } from "@/utils/reportStatus";
 import { convertDateToString } from "@/utils/util";
 import { Button, Space } from "antd";
 import { useEffect, useState } from "react";
@@ -15,9 +14,6 @@ const ReportInfo = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [serviceRequestData, setServiceRequestData] = useState<
     ISerivceRequest[]
-  >([]);
-  const [maintenanceStatus, setMaintenanceStatus] = useState<
-    IMaintenanceStatus[]
   >([]);
 
   const fetchServiceRequest = async () => {
@@ -33,20 +29,8 @@ const ReportInfo = () => {
     }
   };
 
-  const fetchMaintenanceStatus = async () => {
-    setLoading(true);
-    try {
-      const result = await GetAllMaintenanceStatus();
-      setMaintenanceStatus(result.data);
-      setLoading(false);
-    } catch (err) {
-      setLoading(false);
-      throw new Error("Error! Fetching data failed");
-    }
-  };
-
   useEffect(() => {
-    Promise.all([fetchServiceRequest(), fetchMaintenanceStatus()]);
+    Promise.all([fetchServiceRequest()]);
   }, []);
 
   const BreadCrumbLinks: IBreadcrumb[] = [
@@ -77,16 +61,31 @@ const ReportInfo = () => {
     },
     {
       title: "สถานะการรายงาน",
-      dataIndex: "statusID",
       key: "statusID",
-      render: (row: number) => {
-        return maintenanceStatus.find((item) => item.statusID === row)
-          ?.statusName;
+      sorter: (a: ISerivceRequest, b: ISerivceRequest) =>
+        a.statusID - b.statusID,
+      render: (row: ISerivceRequest) => {
+        return (
+          <>
+            <div className=" flex flex-row items-center">
+              <div
+                className={`flex size-3 ${handleReportStatus(row.statusID)?.statusColor} rounded-full`}
+              ></div>
+              <p
+                className={`text-md px-2 ${handleReportStatus(row.statusID)?.statusTextColor}`}
+              >
+                {handleReportStatus(row.statusID)?.statusName}
+              </p>
+            </div>
+          </>
+        );
       },
     },
     {
       title: "วันที่รายงานปัญหา",
       key: "createdDate",
+      sorter: (a: ISerivceRequest, b: ISerivceRequest) =>
+        new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime(),
       render: (row: ISerivceRequest) => {
         const createDate = convertDateToString(row.createdDate);
         let date = new Date();
