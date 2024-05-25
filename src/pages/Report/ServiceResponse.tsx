@@ -104,10 +104,13 @@ const ServiceResponse = () => {
       values.updateDate = new Date();
       values.staffID = auth!.authContext.id;
       values.requestedServiceID = Number(id);
-      if (values.maintenancePart == undefined || values.maintenancePart == null)
-        values.maintenancePart = [];
+      if (
+        values.maintenanceParts == undefined ||
+        values.maintenanceParts == null
+      )
+        values.maintenanceParts = [];
 
-      const elemMaintenanace: IMaintenanceParts[] = values.maintenancePart.map(
+      const elemMaintenanace: IMaintenanceParts[] = values.maintenanceParts.map(
         (elem: IMaintenanceParts) => {
           elem.itemID = Number(elem.itemID);
           elem.qty = Number(elem.qty);
@@ -115,7 +118,7 @@ const ServiceResponse = () => {
         },
       );
 
-      values.maintenancePart = elemMaintenanace;
+      values.maintenanceParts = elemMaintenanace;
       console.log(values);
       const result = await CreateServiceResponse(values);
 

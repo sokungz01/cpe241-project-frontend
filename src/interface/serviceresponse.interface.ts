@@ -13,7 +13,7 @@ export interface IServiceResponse {
   description: string;
   createdDate: Date;
   updateDate: DATENULL | null | Date;
-  maintenancePart: IMaintenanceParts[];
+  maintenanceParts: IMaintenanceParts[];
 }
 
 export interface IServiceResponseGroup {

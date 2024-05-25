@@ -34,14 +34,24 @@ const Sidebar: React.FC = () => {
       label: <Link to="/tools/employee">ข้อมูลพนักงาน</Link>,
     },
     {
-      key: "2",
-      icon: <FormOutlined />,
-      label: <Link to="/tools/report">รายงานแจ้งซ่อม</Link>,
-    },
-    {
       key: "3",
       icon: <TableOutlined />,
       label: <Link to="/tools/machine">ข้อมูลเครื่องจักร</Link>,
+    },
+    {
+      key: "3",
+      icon: <FormOutlined />,
+      label: "รายงาน",
+      children: [
+        {
+          key: "3-1",
+          label: <Link to="/tools/report">รายงานแจ้งซ่อม</Link>,
+        },
+        {
+          key: "3-2",
+          label: <Link to="/tools/report-period">รายงานประจำรอบ</Link>,
+        },
+      ],
     },
     {
       key: "4",

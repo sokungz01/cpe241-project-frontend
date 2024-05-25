@@ -25,6 +25,7 @@ import SettingsInfo from "./pages/Settings/SettingsInfo";
 import CreateErrorTypePage from "./pages/ErrorType/CreateErrorTypePage";
 import ServiceRequest from "./pages/Report/ServiceRequest";
 import ServiceResponse from "./pages/Report/ServiceResponse";
+import ReportPeriodInfo from "./pages/ReportPeriod/ReportPeriodInfo";
 
 const NavbarAndSidebar = () => {
   return (
@@ -122,6 +123,10 @@ function App() {
                     <Route index element={<ReportInfo />} />
                     <Route path="create" element={<ServiceRequest />} />
                     <Route path="response/:id" element={<ServiceResponse />} />
+                  </Route>
+                  <Route path="report-period">
+                    <Route index element={<ReportPeriodInfo />} />
+                    <Route path="create" element={<ServiceRequest />} />
                   </Route>
                   <Route path="dashboard" element={<Dashboard />} />
                 </Route>

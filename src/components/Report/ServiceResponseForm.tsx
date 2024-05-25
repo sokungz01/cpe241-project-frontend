@@ -107,7 +107,7 @@ const ServiceResponseForm = ({
                   </Form.Item>
                 </div>
                 <div className="w-full">
-                  <Form.List name={"maintenancePart"}>
+                  <Form.List name={"maintenanceParts"}>
                     {(parts, partOptions) => (
                       <div>
                         {parts.length > 0 && (

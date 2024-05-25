@@ -22,7 +22,7 @@ const ResponseSection = ({
             <div className="my-4">
               {data.length > 0 ? (
                 <>
-                  {data.map((item, index) => {
+                  {data.map((item: IServiceResponse, index) => {
                     return <ResponseCard data={item} index={index + 1} />;
                   })}
                 </>
