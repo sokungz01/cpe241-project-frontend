@@ -1,6 +1,6 @@
 export interface IErrorlog {
   errorID: number;
-  errorTypeID: number;
+  errorTypeID: number | string;
   serviceID: number;
   errorDescription: string;
   createdDate: Date;
