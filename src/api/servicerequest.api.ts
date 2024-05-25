@@ -34,3 +34,16 @@ export async function DeleteServiceRequest(id: number) {
   const result = await axiosInstance.delete(`/servicerequest/${id}`);
   return result;
 }
+
+export async function UpdateServiceRequestStatus(
+  id: number,
+  values: { statusID: number },
+) {
+  if (!id || Number(id) === 0)
+    throw new Error("Error! Invalid Service Request id");
+  const result = await axiosInstance.put(
+    `/servicerequest/status/${id}`,
+    values,
+  );
+  return result;
+}

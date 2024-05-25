@@ -143,6 +143,7 @@ const ServiceResponse = () => {
           <BreadcrumbComponent links={BreadCrumbLinks} title="เพิ่มรายงาน" />
         </div>
         <ReportStatusBar
+          serviceRequestID={requestForm.getFieldValue("serviceID")}
           status={requestForm.getFieldValue("statusID")}
           userID={requestForm.getFieldValue("employeeID")}
           isResponse={responseData != undefined && responseData.length > 0}
