@@ -121,14 +121,15 @@ const MachineInfo = () => {
       align: "center" as const,
       render: (row: IMachine) => (
         <Space size="middle">
-          <Button
+          {/* <Button
             className=" border-[#0174BE] text-[#0174BE] text-sm"
             onClick={() => {
-              alert("KUY");
+              setOpenModal(true);
+              setMachineIndData(row);
             }}
           >
             ตรวจสอบ
-          </Button>
+          </Button> */}
           <Link to={`edit/${row.machineID}`}>
             <Button className="border-[#0174BE] text-[#0174BE] text-sm">
               แก้ไข
