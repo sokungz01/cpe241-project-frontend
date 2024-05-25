@@ -142,10 +142,7 @@ const ServiceResponse = () => {
         <ReportStatusBar
           status={requestForm.getFieldValue("statusID")}
           userID={requestForm.getFieldValue("employeeID")}
-          isResponse={
-            responseData?.serviceResponse != undefined &&
-            responseData?.serviceResponse.length > 0
-          }
+          isResponse={responseData != undefined && responseData.length > 0}
         />
         <ServiceRequestForm loading={loading} form={requestForm} disabled />
         <ResponseSection loading={loading} data={responseData!} />
