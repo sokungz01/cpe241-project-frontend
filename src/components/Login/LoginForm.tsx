@@ -1,4 +1,5 @@
 import { Login } from "@/api/authen.api";
+import { axiosInstance } from "@/api/axiosInstance";
 import { SwalError, SwalSuccess } from "@/utils/swal";
 import { Form, Input } from "antd";
 import { useEffect, useState } from "react";
@@ -15,7 +16,6 @@ const LoginForm = () => {
   useEffect(() => {
     if (token !== null && token !== "") {
       navigate("/tools/employee");
-      location.reload();
     }
   });
 
@@ -29,7 +29,7 @@ const LoginForm = () => {
       }
       const token: string = response.data.token;
       localStorage.setItem("accessToken", token);
-
+      axiosInstance.defaults.headers.Authorization = `Bearer ${token}`;
       SwalSuccess("เข้าสู่ระบบสำเร็จ", "กำลังเปลี่ยนเส้นทาง");
       setIsLoading(false);
     } catch (err) {
