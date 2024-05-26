@@ -60,7 +60,7 @@ const TableColumns = [
     title: "อันดับที่",
     dataIndex: "index",
     key: "index",
-    render: (_value: any, _row: any, index: number) => index + 1,
+    render: (_value: number, _row: number, index: number) => index + 1,
     width: "10%",
   },
   {
@@ -460,7 +460,7 @@ const Dashboard = () => {
             </div>
             <div className="bg-white shadow-xl my-5 p-5 flex flex-col">
               <p className="text-center text-lg font-light my-4">
-                กราฟแสดงอัตราการเพิ่ม - ลดของอุปกรณ์คงคลังในแต่ละวัน - 
+                กราฟแสดงอัตราการเพิ่ม - ลดของอุปกรณ์คงคลังในแต่ละวัน -
                 แยกตามประเภทอุปกรณ์
               </p>
               <div className="w-full">

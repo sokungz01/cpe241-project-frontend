@@ -3,7 +3,6 @@ import BreadcrumbComponent from "@/components/BreadcrumbComponent/BreadcrumbComp
 import TableInfo from "@/components/Info/TableInfo";
 import { IItemLog } from "@/interface/itemLog.interface";
 import { IBreadcrumb } from "@/interface/utils.interface";
-import { Button, Space } from "antd";
 import { useMemo, useState } from "react";
 
 const ItemLogInfo = () => {
@@ -79,24 +78,6 @@ const ItemLogInfo = () => {
       title: "กระทำโดย",
       key: "staff",
       render: (row: IItemLog) => row.staff.name + " " + row.staff.surname,
-    },
-    {
-      title: "Action",
-      key: "action",
-      width: 150,
-      align: "center" as const,
-      render: () => (
-        <Space size="middle">
-          <Button
-            className=" border-[#0174BE] text-[#0174BE] text-sm"
-            onClick={() => {
-              alert("KUY");
-            }}
-          >
-            ตรวจสอบ
-          </Button>
-        </Space>
-      ),
     },
   ];
   return (
