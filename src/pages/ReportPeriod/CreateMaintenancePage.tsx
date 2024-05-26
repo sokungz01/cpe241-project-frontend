@@ -153,12 +153,14 @@ const CreateMaintenancePage = ({ isEdit }: { isEdit?: boolean }) => {
             />
           )}
         </div>
-        <ReportStatusBar
-          serviceRequestID={Number(id)}
-          status={form.getFieldValue("statusID")}
-          userID={form.getFieldValue("staffID")}
-          maintain
-        />
+        {isEdit && (
+          <ReportStatusBar
+            serviceRequestID={Number(id)}
+            status={form.getFieldValue("statusID")}
+            userID={form.getFieldValue("staffID")}
+            maintain
+          />
+        )}
         <Form
           form={form}
           layout="vertical"

@@ -4,6 +4,10 @@ import { handleReportStatus } from "@/utils/reportStatus";
 import { Button, Select } from "antd";
 import { useContext, useState } from "react";
 import ReportStatusChangeModal from "./ReportStatusChangeModal";
+import { UpdateMaintenanceLogStatus } from "@/api/maintenancelog.api";
+import { UpdateServiceRequestStatus } from "@/api/servicerequest.api";
+import { SwalError, SwalSuccess } from "@/utils/swal";
+import { useNavigate } from "react-router-dom";
 
 const ReportStatusBar = ({
   serviceRequestID,
@@ -18,6 +22,7 @@ const ReportStatusBar = ({
   isResponse?: boolean;
   maintain?: boolean;
 }) => {
+  const navigate = useNavigate();
   const Auth = useContext(AuthContext);
   const [statusID, setStatusID] = useState<number>(0);
   const [open, setOpen] = useState<boolean>(false);
@@ -48,8 +53,44 @@ const ReportStatusBar = ({
           </div>
         </div>
         <div className="flex flex-row justify-end w-1/2">
-          {Auth?.authContext.id === userID && (
-            <Button danger className="mr-3 h-10" disabled={isResponse}>
+          {(Auth?.authContext.id === userID ||
+            Auth?.authContext.positionID != 1) && (
+            <Button
+              danger
+              className="mr-3 h-10"
+              disabled={isResponse}
+              onClick={async () => {
+                if (maintain) {
+                  const result = await UpdateMaintenanceLogStatus(
+                    serviceRequestID,
+                    { statusID: 5 },
+                  );
+                  setOpen(false);
+                  if (result.status !== 200) {
+                    SwalError("เกิดข้อผิดพลาด", "ไม่สามารถแก้ไขสถานะได้");
+                  } else {
+                    SwalSuccess("สำเร็จ", "เปลี่ยนสถานะเสร็จสิ้น").then(() => {
+                      navigate("../");
+                    });
+                  }
+                } else {
+                  const result = await UpdateServiceRequestStatus(
+                    serviceRequestID,
+                    {
+                      statusID: 5,
+                    },
+                  );
+                  setOpen(false);
+                  if (result.status !== 200) {
+                    SwalError("เกิดข้อผิดพลาด", "ไม่สามารถแก้ไขสถานะได้");
+                  } else {
+                    SwalSuccess("สำเร็จ", "เปลี่ยนสถานะเสร็จสิ้น").then(() => {
+                      navigate("../");
+                    });
+                  }
+                }
+              }}
+            >
               ยกเลิกคำร้อง
             </Button>
           )}
