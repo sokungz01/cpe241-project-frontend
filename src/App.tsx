@@ -12,7 +12,7 @@ import Dashboard from "./pages/Dashboard";
 import AddEmployee from "./pages/Employee/AddEmployee";
 import EmployeeInfo from "./pages/Employee/EmployeeInfo";
 import CreateItemPage from "./pages/Item/CreateItemPage";
-import ItmeInfo from "./pages/Item/ItemInfo";
+import ItemInfo from "./pages/Item/ItemInfo";
 import CreateItemCategoryPage from "./pages/ItemCategory/CreateItemCategoryPage";
 import ItemLogInfo from "./pages/ItemLog/ItemLogInfo";
 import LoginPage from "./pages/LoginPage";
@@ -75,7 +75,7 @@ function App() {
                     />
                   </Route>
                   <Route path="item">
-                    <Route index element={<ItmeInfo />} />
+                    <Route index element={<ItemInfo />} />
                     <Route path="create" element={<CreateItemPage />} />
                     <Route
                       path="edit/:id"

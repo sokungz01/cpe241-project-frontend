@@ -67,6 +67,7 @@ const ItemInfo = () => {
       title: "ประเภทอุปกรณ์",
       dataIndex: "itemCategoryID",
       key: "itemCategoryID",
+      sorter: (a: IItem, b: IItem) => a.itemCategoryID - b.itemCategoryID,
       render: (record: number) =>
         itemCategory.find((item) => item.categoryID === record)?.categoryName,
     },

@@ -19,6 +19,8 @@ import { useCallback, useContext, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ResponseSection from "../../components/Report/ResponseSection";
 import ReportStatusBar from "@/components/Report/ReportStatusBar";
+import { IItem } from "@/interface/item.interface";
+import { GetItemByID } from "@/api/item.api";
 
 const ServiceResponse = () => {
   const { id } = useParams();
@@ -110,26 +112,53 @@ const ServiceResponse = () => {
       )
         values.maintenanceParts = [];
 
-      const elemMaintenanace: IMaintenanceParts[] = values.maintenanceParts.map(
-        (elem: IMaintenanceParts) => {
+      let isValid = true;
+
+      const elemMaintenance = Promise.all(
+        values.maintenanceParts.map(async (elem: IMaintenanceParts) => {
           elem.itemID = Number(elem.itemID);
           elem.qty = Number(elem.qty);
+          const res = await GetItemByID(elem.itemID);
+          const item: IItem = res.data;
+          console.log(item.qty);
+          console.log(elem.qty);
+          if (
+            item.qty === undefined ||
+            item.qty === 0 ||
+            item.qty - elem.qty < 0
+          ) {
+            isValid = false;
+          }
           return elem;
-        },
+        }),
       );
 
-      values.maintenanceParts = elemMaintenanace;
-      console.log(values);
-      const result = await CreateServiceResponse(values);
+      elemMaintenance
+        .then(async (resolvedParts) => {
+          if (!isValid) {
+            SwalError(
+              "ผิดพลาด",
+              "อุปกรณ์มีไม่เพียงพอกรุณาตรวจสอบจำนวนอุปกรณ์อีกครั้ง",
+            );
+            throw new Error("Error! item qty not enough");
+          }
 
-      if (result.status !== 200) {
-        SwalError("เกิดข้อผิดพลาด", "ไม่สามารถสร้างรายงานปัญหาได้");
-        throw new Error("Error! Cannot post the data");
-      }
+          values.maintenanceParts = resolvedParts;
 
-      SwalSuccess("สำเร็จ", "เพิ่มผลรายงานการแจ้งซ่อม").then(() => {
-        navigate("../");
-      });
+          const result = await CreateServiceResponse(values);
+
+          if (result.status !== 200) {
+            SwalError("เกิดข้อผิดพลาด", "ไม่สามารถสร้างรายงานปัญหาได้");
+            throw new Error("Error! Cannot post the data");
+          }
+
+          SwalSuccess("สำเร็จ", "เพิ่มผลรายงานการแจ้งซ่อม").then(() => {
+            navigate("../");
+          });
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     } catch (error) {
       throw new Error("Error! cannot post the response data");
     } finally {

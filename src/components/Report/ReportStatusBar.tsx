@@ -75,7 +75,7 @@ const ReportStatusBar = ({
         statusID={statusID}
         setOpen={setOpen}
         open={open}
-        maintain
+        maintain={maintain}
       />
     </div>
   );
