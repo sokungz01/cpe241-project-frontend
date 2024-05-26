@@ -57,6 +57,13 @@ const colors = [
 
 const TableColumns = [
   {
+    title: "อันดับที่",
+    dataIndex: "index",
+    key: "index",
+    render: (_value: any, _row: any, index: number) => index + 1,
+    width: "10%",
+  },
+  {
     title: "รหัส",
     key: "employeeID",
     render: (row: IEmployeeEngagementAnalysis) =>
@@ -66,14 +73,13 @@ const TableColumns = [
     title: "รายชื่อ",
     key: "staff",
     render: (row: IEmployeeEngagementAnalysis) => row.name + " " + row.surname,
+    width: "20%",
   },
   {
     title: "จำนวนการซ่อม",
     key: "itemName",
     render: (row: IEmployeeEngagementAnalysis) =>
       row.maintenanceCount + "  ครั้ง",
-    sorter: (a: IEmployeeEngagementAnalysis, b: IEmployeeEngagementAnalysis) =>
-      a.maintenanceCount - b.maintenanceCount,
   },
   {
     title: "จำนวนชิ้นที่เบิกรวม",
@@ -454,11 +460,11 @@ const Dashboard = () => {
             </div>
             <div className="bg-white shadow-xl my-5 p-5 flex flex-col">
               <p className="text-center text-lg font-light my-4">
-                กราฟแสดงอัตราการเพิ่ม - ลดของอุปกรณ์คงคลังในแต่ละวัน
-                เทียบกับประเภทของอุปกรณ์
+                กราฟแสดงอัตราการเพิ่ม - ลดของอุปกรณ์คงคลังในแต่ละวัน - 
+                แยกตามประเภทอุปกรณ์
               </p>
               <div className="w-full">
-                <Line data={InventoryAnalyticState} options={chartOptions}/>
+                <Line data={InventoryAnalyticState} options={chartOptions} />
               </div>
             </div>
             <div className="bg-white shadow-xl my-5 p-5 flex flex-col">
@@ -472,7 +478,9 @@ const Dashboard = () => {
             </div>
 
             <div className="bg-white shadow-xl my-5 p-5 flex flex-col">
-              <p className="text-center text-lg font-light my-4"></p>
+              <p className="text-center text-lg font-light my-4 mb-[-20px]">
+                ตารางแสดงอันดับพนักงานที่มีส่วนร่วมในการซ่อมบำรุงเครื่องจักรสูงสุดและการใช้งานอุปกรณ์คงคลัง
+              </p>
               <div className="w-full">
                 <TableInfo
                   title=""
@@ -484,7 +492,7 @@ const Dashboard = () => {
             </div>
 
             <div className="bg-white shadow-xl my-5 p-5 flex flex-col items-center">
-              <p className="text-center text-lg font-light my-4">
+              <p className="text-center text-lg font-light my-4 py-4">
                 กราฟแสดงค่าใช้จ่ายในการซ่อมบำรุงเครื่องจักร -
                 แยกตามประเภทความเสียหาย
               </p>
