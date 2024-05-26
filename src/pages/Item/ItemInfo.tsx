@@ -3,6 +3,7 @@ import { GetAllItemCategory } from "@/api/itemCategory.api";
 import BreadcrumbComponent from "@/components/BreadcrumbComponent/BreadcrumbComponent";
 import TableInfo from "@/components/Info/TableInfo";
 import AddQuantityModal from "@/components/Item/AddQuantityModal";
+import QueryItem from "@/components/Item/QueryItem";
 import { IItem, initialItem } from "@/interface/item.interface";
 import { IItemCategory } from "@/interface/itemCategory.interface";
 import { IBreadcrumb } from "@/interface/utils.interface";
@@ -13,10 +14,11 @@ import { Link } from "react-router-dom";
 const ItemInfo = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [itemData, setItemData] = useState<IItem[]>([]);
+  const [masterData, setmasterData] = useState<IItem[]>([]);
   const [itemCategory, setItemCategory] = useState<IItemCategory[]>([]);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [selectedData, setSelectedData] = useState<IItem>(initialItem);
-
+  const [search, setSearch] = useState<string>("");
   const BreadCrumbLinks: IBreadcrumb[] = [
     {
       title: "ข้อมูลชิ้นส่วนอุปกรณ์",
@@ -41,12 +43,26 @@ const ItemInfo = () => {
     try {
       const result = await GetAllItem();
       setItemData(result.data);
+      setmasterData(result.data);
       setLoading(false);
     } catch (err) {
       setLoading(false);
       throw new Error("Error! Fetching data failed");
     }
   };
+
+  useMemo(() => {
+    let filteredData = masterData;
+    if (search !== "") {
+      filteredData = filteredData.filter((item) => {
+        return (
+          item.itemName.toLowerCase().match(search.toLowerCase()) ||
+          item.itemID.toString().match(search.toLowerCase())
+        );
+      });
+    }
+    setItemData(filteredData);
+  }, [masterData, search]);
 
   useMemo(() => {
     Promise.all([fetchItemData(), fetchItemCategoryData()]);
@@ -114,6 +130,9 @@ const ItemInfo = () => {
           title={"ข้อมูลชิ้นส่วนอุปกรณ์"}
           links={BreadCrumbLinks}
         />
+      </div>
+      <div className="m-6 bg-white rounded-md">
+        <QueryItem setSearch={setSearch} />
       </div>
 
       <TableInfo

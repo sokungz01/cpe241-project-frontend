@@ -2,6 +2,7 @@ import { GetAllMachine } from "@/api/machine.api";
 import { GetAllMachineType } from "@/api/machinetype.api";
 import BreadcrumbComponent from "@/components/BreadcrumbComponent/BreadcrumbComponent";
 import TableInfo from "@/components/Info/TableInfo";
+import QueryMachine from "@/components/Machine/QueryMachine";
 import { IMachine } from "@/interface/machine.interface";
 import { IMachineType } from "@/interface/machinetype.interface";
 import { IBreadcrumb } from "@/interface/utils.interface";
@@ -12,7 +13,10 @@ import { Link } from "react-router-dom";
 
 const MachineInfo = () => {
   const [loading, setLoading] = useState<boolean>(true);
+  const [search, setSearch] = useState<string>("");
+  const [select, setSelect] = useState<number>(0);
   const [machineData, setMachineData] = useState<IMachine[]>([]);
+  const [masterData, setMasterdata] = useState<IMachine[]>([]);
   const [machineTypeData, setMachineTypeData] = useState<IMachineType[]>([]);
 
   const BreadCrumbLinks: IBreadcrumb[] = [
@@ -38,6 +42,7 @@ const MachineInfo = () => {
     setLoading(true);
     try {
       const result = await GetAllMachine();
+      setMasterdata(result.data);
       setMachineData(result.data);
       setLoading(false);
     } catch (err) {
@@ -45,6 +50,25 @@ const MachineInfo = () => {
       throw new Error("Error! Fetching data failed");
     }
   };
+
+  useMemo(() => {
+    let filteredData = masterData;
+    if (search !== "") {
+      filteredData = filteredData.filter((item) => {
+        return (
+          item.machineName.toLowerCase().match(search.toLowerCase()) ||
+          item.machineBrand.toLowerCase().match(search.toLowerCase()) ||
+          item.machineID.toString().match(search.toLowerCase())
+        );
+      });
+    }
+    if (select !== 0) {
+      filteredData = filteredData.filter((item) => {
+        return item.machineTypeID === select;
+      });
+    }
+    setMachineData(filteredData);
+  }, [masterData, search, select]);
 
   useMemo(() => {
     Promise.all([fetchMachineData(), fetchMachineTypeData()]);
@@ -146,6 +170,14 @@ const MachineInfo = () => {
         <BreadcrumbComponent
           title={"ข้อมูลเครื่องจักร"}
           links={BreadCrumbLinks}
+        />
+      </div>
+
+      <div className="m-6 bg-white rounded-md">
+        <QueryMachine
+          setSearch={setSearch}
+          machineType={machineTypeData}
+          setMachineType={setSelect}
         />
       </div>
 
