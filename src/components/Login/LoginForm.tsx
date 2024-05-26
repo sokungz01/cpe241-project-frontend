@@ -1,21 +1,30 @@
 import { Login } from "@/api/authen.api";
 import { axiosInstance } from "@/api/axiosInstance";
+import { AuthContext } from "@/context/auth.context";
 import { SwalError, SwalSuccess } from "@/utils/swal";
 import { Form, Input } from "antd";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { IoLockClosedOutline } from "react-icons/io5";
 import { LuUser2 } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
   const [form] = Form.useForm();
+  const auth = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const token: string | null = localStorage.getItem("accessToken") || null;
 
   useEffect(() => {
     if (token !== null && token !== "") {
-      navigate("/tools/employee");
+      if (
+        auth?.authContext.positionID === 1 ||
+        auth?.authContext.positionID === 2
+      ) {
+        navigate("/tools/report");
+      } else {
+        navigate("/tools/employee");
+      }
     }
   });
 
