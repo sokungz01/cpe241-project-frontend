@@ -17,10 +17,10 @@ export interface IEmployeeEngagementAnalysis {
   surname: string;
   maintenanceCount: number;
   totalInventoryUsed: number;
-  inventoryItemsUsed: number;
+  inventoryItemsUsed: string;
 }
 
-export interface MaintenanceCostAnlysis {
+export interface IMaintenanceCostAnlysis {
   errorName: string;
   errorCount: number;
   totalMaintenanceCost: number;
