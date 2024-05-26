@@ -44,7 +44,7 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  ArcElement
+  ArcElement,
 );
 
 const colors = [
@@ -159,7 +159,7 @@ const Dashboard = () => {
     ];
     const datasets = categories.map((category) => {
       const categoryData = inventoryData.filter(
-        (item) => item.categoryName === category
+        (item) => item.categoryName === category,
       );
       const addedData = categoryData.map((item) => item.totalAdded);
       const removedData = categoryData.map((item) => item.totalRemoved);
@@ -190,19 +190,19 @@ const Dashboard = () => {
     const dates = [
       ...new Set(
         machineTypeErrorData.map((item) =>
-          new Date(item.requestDate).toLocaleDateString()
-        )
+          new Date(item.requestDate).toLocaleDateString(),
+        ),
       ),
     ];
 
     const updatedDatasets = machineTypes.map((machineType, index) => {
       const dataForMachineType = machineTypeErrorData.filter(
-        (item) => item.machineTypeName === machineType
+        (item) => item.machineTypeName === machineType,
       );
 
       const data = dates.map((date) => {
         const itemForDate = dataForMachineType.find(
-          (item) => new Date(item.requestDate).toLocaleDateString() === date
+          (item) => new Date(item.requestDate).toLocaleDateString() === date,
         );
         return itemForDate ? itemForDate.totalServiceRequests : 0;
       });
@@ -220,7 +220,7 @@ const Dashboard = () => {
     const labels = maintainCostData.map((item) => item.errorName);
     const data = maintainCostData.map((item) => item.totalMaintenanceCost);
     const backgroundColor = labels.map(
-      (_, index) => `hsl(${(index / labels.length) * 360}, 100%, 75%)`
+      (_, index) => `hsl(${(index / labels.length) * 360}, 100%, 75%)`,
     );
 
     setMaintainanceCostAnalyticState({
@@ -234,7 +234,7 @@ const Dashboard = () => {
     });
     setInventoryAnalyticState({
       labels: Array.from(
-        new Set(inventoryData.map((item) => item.Date.toString()))
+        new Set(inventoryData.map((item) => item.Date.toString())),
       ),
       datasets: datasets.flat(),
     });
@@ -268,7 +268,7 @@ const Dashboard = () => {
         data: 0,
       },
     ],
-    []
+    [],
   );
 
   const MachineData = useMemo(
@@ -284,7 +284,7 @@ const Dashboard = () => {
         data: 0,
       },
     ],
-    []
+    [],
   );
 
   useMemo(async () => {
@@ -352,7 +352,7 @@ const Dashboard = () => {
               totalServiceRequests: item.totalServiceRequests,
               requestDate: convertDateToString(new Date(item.requestDate)),
             };
-          }
+          },
         );
         setMachineTypeErrorData(remapData);
       } catch (error) {
@@ -371,7 +371,7 @@ const Dashboard = () => {
               totalServiceRequests: item.totalServiceRequests,
               requestDate: new Date(item.requestDate),
             };
-          }
+          },
         );
         setMachineTypeErrorData(remapData);
       } catch (error) {
@@ -390,7 +390,7 @@ const Dashboard = () => {
               errorCount: item.errorCount,
               totalMaintenanceCost: item.totalMaintenanceCost,
             };
-          }
+          },
         );
         setMaintainCostData(remapData);
       } catch (error) {

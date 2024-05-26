@@ -109,6 +109,7 @@ const CreateMachinePage = ({ isEdit }: { isEdit?: boolean }) => {
     setLoading(true);
     try {
       values.machineTypeID = Number(values.machineTypeID);
+      values.status = values.status ? 1 : 0;
       const result = await CreateMachine(values);
       if (result.status !== 200)
         throw new Error("Error! Post the data not success.");
