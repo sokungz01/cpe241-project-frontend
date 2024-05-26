@@ -90,6 +90,7 @@ const QueryMachine = ({
               onClick={() => {
                 setSearch("");
                 setMachineType(0);
+                setSelect(0);
                 setQuery("");
               }}
             >
