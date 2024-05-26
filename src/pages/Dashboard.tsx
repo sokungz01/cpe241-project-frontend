@@ -1,13 +1,18 @@
 import {
+  GetAllEmployeeEngagement,
   GetAllInventoryAnalyze,
   GetAllMachineTypeErrorAnalyze,
+  GetAllMaintainCost,
 } from "@/api/analysis.api";
 import { GetAllEmployee } from "@/api/employee.api";
 import { GetAllMachine } from "@/api/machine.api";
 import AnalyticCard from "@/components/Dashboard/AnalyticCard";
+import TableInfo from "@/components/Info/TableInfo";
 import {
+  IEmployeeEngagementAnalysis,
   IInventoryAnalysis,
   IMachineTypeErrorAnylysis,
+  IMaintenanceCostAnlysis,
 } from "@/interface/analysis.interface";
 import { IEmployee } from "@/interface/employee.interface";
 import { IMachine } from "@/interface/machine.interface";
@@ -16,6 +21,7 @@ import { Spin } from "antd";
 import {
   CategoryScale,
   Chart as ChartJS,
+  ArcElement,
   Legend,
   LinearScale,
   LineElement,
@@ -24,7 +30,7 @@ import {
   Tooltip,
 } from "chart.js";
 import { useEffect, useMemo, useState } from "react";
-import { Line } from "react-chartjs-2";
+import { Line, Pie } from "react-chartjs-2";
 import { FaUser, FaUserCog, FaUserTie } from "react-icons/fa";
 import { IoCloudDone, IoCloudOffline } from "react-icons/io5";
 import { RiAdminFill } from "react-icons/ri";
@@ -37,6 +43,7 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
+  ArcElement,
 );
 
 const colors = [
@@ -47,13 +54,43 @@ const colors = [
   "rgba(153,102,255,1)",
 ];
 
+const TableColumns = [
+  {
+    title: "รายชื่อ",
+    key: "staff",
+    render: (row: IEmployeeEngagementAnalysis) => row.name + " " + row.surname,
+  },
+  {
+    title: "จำนวนการการซ่อม",
+    key: "itemName",
+    render: (row: IEmployeeEngagementAnalysis) => row.maintenanceCount + " รอบ",
+  },
+  {
+    title: "จำนวนชิ้นที่เบิก",
+    key: "itemCost",
+    render: (row: IEmployeeEngagementAnalysis) =>
+      row.totalInventoryUsed + " ชิ้น",
+  },
+  {
+    title: "สถานะ",
+    dataIndex: "inventoryItemsUsed",
+    key: "inventoryItemsUsed",
+  },
+];
+
 const Dashboard = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [inventoryData, setInventoryData] = useState<IInventoryAnalysis[]>([]);
   const [machineTypeErrorData, setMachineTypeErrorData] = useState<
     IMachineTypeErrorAnylysis[]
   >([]);
+  const [employeeEngagementData, setEmployeeEngagementData] = useState<
+    IEmployeeEngagementAnalysis[]
+  >([]);
 
+  const [maintainCostData, setMaintainCostData] = useState<
+    IMaintenanceCostAnlysis[]
+  >([]);
   // Define the state for InventoryAnalyticState
   const [InventoryAnalyticState, setInventoryAnalyticState] = useState<{
     labels: string[];
@@ -81,6 +118,23 @@ const Dashboard = () => {
     labels: [],
     datasets: [],
   });
+
+  const [MaintainanceCostAnalyticState, setMaintainanceCostAnalyticState] =
+    useState<{
+      labels: string[];
+      datasets: {
+        data: number[];
+        backgroundColor: string[];
+      }[];
+    }>({
+      labels: [],
+      datasets: [
+        {
+          data: [],
+          backgroundColor: [],
+        },
+      ],
+    });
 
   // Use useEffect to update InventoryAnalyticState when inventoryData changes
   useEffect(() => {
@@ -147,24 +201,39 @@ const Dashboard = () => {
       };
     });
 
-    setMachineErrorAnalyticState({
-      labels: dates,
-      datasets: updatedDatasets,
-    });
+    const labels = maintainCostData.map((item) => item.errorName);
+    const data = maintainCostData.map((item) => item.totalMaintenanceCost);
+    const backgroundColor = labels.map(
+      (_, index) => `hsl(${(index / labels.length) * 360}, 100%, 75%)`,
+    );
 
+    setMaintainanceCostAnalyticState({
+      labels,
+      datasets: [
+        {
+          data,
+          backgroundColor,
+        },
+      ],
+    });
     setInventoryAnalyticState({
       labels: Array.from(
         new Set(inventoryData.map((item) => item.Date.toString())),
       ),
       datasets: datasets.flat(),
     });
-  }, [inventoryData, machineTypeErrorData]);
+
+    setMachineErrorAnalyticState({
+      labels: dates,
+      datasets: updatedDatasets,
+    });
+  }, [inventoryData, machineTypeErrorData, maintainCostData]);
 
   const EmployeeData = useMemo(
     () => [
       {
         icon: <FaUser className="size-12" />,
-        title: "พนักงงาน",
+        title: "พนักงาน",
         data: 0,
       },
       {
@@ -274,11 +343,63 @@ const Dashboard = () => {
         throw new Error("Error! cannot get the data");
       }
     };
+
+    const fetchMachineTypeError = async () => {
+      try {
+        const result = await GetAllMachineTypeErrorAnalyze();
+        const machineTypeError: IMachineTypeErrorAnylysis[] = result.data;
+        const remapData: IMachineTypeErrorAnylysis[] = machineTypeError.map(
+          (item: IMachineTypeErrorAnylysis) => {
+            return {
+              machineTypeName: item.machineTypeName,
+              totalServiceRequests: item.totalServiceRequests,
+              requestDate: new Date(item.requestDate).toString(),
+            };
+          },
+        );
+        setMachineTypeErrorData(remapData);
+      } catch (error) {
+        throw new Error("Error! cannot get the data");
+      }
+    };
+
+    const fetchMaintenanceCost = async () => {
+      try {
+        const result = await GetAllMaintainCost();
+        const maintainCost: IMaintenanceCostAnlysis[] = result.data;
+        const remapData: IMaintenanceCostAnlysis[] = maintainCost.map(
+          (item: IMaintenanceCostAnlysis) => {
+            return {
+              errorName: item.errorName,
+              errorCount: item.errorCount,
+              totalMaintenanceCost: item.totalMaintenanceCost,
+            };
+          },
+        );
+        setMaintainCostData(remapData);
+      } catch (error) {
+        throw new Error("Error! cannot get the data");
+      }
+    };
+
+    const fetchEmployeeEngagement = async () => {
+      try {
+        const result = await GetAllEmployeeEngagement();
+        const employeeEngagement: IEmployeeEngagementAnalysis[] = result.data;
+        setEmployeeEngagementData(employeeEngagement);
+      } catch (error) {
+        throw new Error("Error! cannot get the data");
+      }
+    };
+
     Promise.all([
       fetchEmployee(),
       fetchMachine(),
       fetchInventory(),
       fetchMachineError(),
+      fetchMachineTypeError(),
+      fetchMaintenanceCost(),
+      fetchEmployeeEngagement(),
     ]).then(() => {
       setLoading(false);
     });
@@ -332,11 +453,36 @@ const Dashboard = () => {
             </div>
             <div className="bg-white shadow-xl my-5 p-5 flex flex-col">
               <p className="text-center text-lg font-light my-4">
-                กราฟแสดงอัตราการเพิ่ม - ลดของอุปกรณ์คงคลังในแต่ละวัน
-                เทียบกับประเภทของอุปกรณ์
+                กราฟแสดงจำนวนคำร้องแจ้งซ่อมของเครื่องจักรในแต่ละวัน -
+                แยกตามประเภทของเครื่องจักร
               </p>
               <div className="w-full">
                 <Line data={MachineErrorAnalyticState} options={chartOptions} />
+              </div>
+            </div>
+
+            <div className="bg-white shadow-xl my-5 p-5 flex flex-col">
+              <p className="text-center text-lg font-light my-4"></p>
+              <div className="w-full">
+                <TableInfo
+                  title="ตารางแสดงผู้ทำการซ่อมและจำนวนอุปกรณ์ที่เบิก"
+                  dataSource={employeeEngagementData}
+                  columns={TableColumns}
+                  loading={loading}
+                />
+              </div>
+            </div>
+
+            <div className="bg-white shadow-xl my-5 p-5 flex flex-col items-center">
+              <p className="text-center text-lg font-light my-4">
+                กราฟแสดงจำนวนคำร้องแจ้งซ่อมของเครื่องจักรในแต่ละวัน -
+                แยกตามประเภทของเครื่องจักร
+              </p>
+              <div className="w-1/2">
+                <Pie
+                  data={MaintainanceCostAnalyticState}
+                  options={chartOptions}
+                />
               </div>
             </div>
           </>

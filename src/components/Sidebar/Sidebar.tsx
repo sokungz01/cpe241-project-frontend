@@ -14,7 +14,7 @@ import { Layout, Menu } from "antd";
 import React, { useContext, useState } from "react";
 import { LuWrench } from "react-icons/lu";
 import { RiLogoutBoxLine } from "react-icons/ri";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const { Sider } = Layout;
 type MenuItem = Required<MenuProps>["items"][number];
@@ -39,7 +39,7 @@ const Sidebar: React.FC = () => {
         label: <Link to="/tools/employee">ข้อมูลพนักงาน</Link>,
       },
       {
-        key: "3",
+        key: "2",
         icon: <TableOutlined />,
         label: <Link to="/tools/machine">ข้อมูลเครื่องจักร</Link>,
       },
@@ -97,7 +97,7 @@ const Sidebar: React.FC = () => {
         label: <Link to="/tools/employee">ข้อมูลพนักงาน</Link>,
       },
       {
-        key: "3",
+        key: "2",
         icon: <TableOutlined />,
         label: <Link to="/tools/machine">ข้อมูลเครื่องจักร</Link>,
       },
@@ -145,7 +145,7 @@ const Sidebar: React.FC = () => {
   } else if (auth?.authContext.positionID === 2) {
     items = [
       {
-        key: "3",
+        key: "2",
         icon: <TableOutlined />,
         label: <Link to="/tools/machine">ข้อมูลเครื่องจักร</Link>,
       },
@@ -201,6 +201,46 @@ const Sidebar: React.FC = () => {
   }
   const [collapsed, setCollapsed] = useState(true);
 
+  const location = useLocation();
+
+  const allLocation = [
+    {
+      path: "/tools/employee",
+      key: "1",
+    },
+    {
+      path: "/tools/machine",
+      key: "2",
+    },
+    {
+      path: "/tools/report",
+      key: "3-1",
+    },
+    {
+      path: "/tools/report-period",
+      key: "3-2",
+    },
+    {
+      path: "/tools/item",
+      key: "4-1",
+    },
+    {
+      path: "/tools/item/log",
+      key: "4-2",
+    },
+    {
+      path: "/tools/settings",
+      key: "5",
+    },
+    {
+      path: "/tools/dashboard",
+      key: "6",
+    },
+  ];
+
+  const currentKey = allLocation.find((key) => key.path === location.pathname);
+  console.log(currentKey?.key);
+
   return (
     <>
       <Layout className="shadow-md overflow-hidden">
@@ -224,10 +264,11 @@ const Sidebar: React.FC = () => {
           </button>
           <Menu
             theme="light"
-            defaultSelectedKeys={["1"]}
+            defaultSelectedKeys={[currentKey?.key ?? ""]}
             mode="inline"
             items={items}
             className="h-screen flex flex-col"
+            defaultOpenKeys={[currentKey?.key?.split("-")[0] ?? ""]}
           />
         </Sider>
       </Layout>
