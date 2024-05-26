@@ -17,6 +17,7 @@ import {
 import { IEmployee } from "@/interface/employee.interface";
 import { IMachine } from "@/interface/machine.interface";
 import { chartOptions } from "@/utils/chart";
+import { convertDateToString } from "@/utils/util";
 import { Spin } from "antd";
 import {
   CategoryScale,
@@ -43,7 +44,7 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  ArcElement,
+  ArcElement
 );
 
 const colors = [
@@ -56,23 +57,38 @@ const colors = [
 
 const TableColumns = [
   {
+    title: "อันดับที่",
+    dataIndex: "index",
+    key: "index",
+    render: (_value: any, _row: any, index: number) => index + 1,
+    width: "10%",
+  },
+  {
+    title: "รหัส",
+    key: "employeeID",
+    render: (row: IEmployeeEngagementAnalysis) =>
+      row.employeeID.toString().padStart(6, "0"),
+  },
+  {
     title: "รายชื่อ",
     key: "staff",
     render: (row: IEmployeeEngagementAnalysis) => row.name + " " + row.surname,
+    width: "20%",
   },
   {
-    title: "จำนวนการการซ่อม",
+    title: "จำนวนการซ่อม",
     key: "itemName",
-    render: (row: IEmployeeEngagementAnalysis) => row.maintenanceCount + " รอบ",
-  },
-  {
-    title: "จำนวนชิ้นที่เบิก",
-    key: "itemCost",
     render: (row: IEmployeeEngagementAnalysis) =>
-      row.totalInventoryUsed + " ชิ้น",
+      row.maintenanceCount + "  ครั้ง",
   },
   {
-    title: "สถานะ",
+    title: "จำนวนชิ้นที่เบิกรวม",
+    key: "totalInventoryUsed",
+    render: (row: IEmployeeEngagementAnalysis) =>
+      row.totalInventoryUsed + "  ชิ้น",
+  },
+  {
+    title: "อุปกรณ์ที่ใช้",
     dataIndex: "inventoryItemsUsed",
     key: "inventoryItemsUsed",
   },
@@ -143,7 +159,7 @@ const Dashboard = () => {
     ];
     const datasets = categories.map((category) => {
       const categoryData = inventoryData.filter(
-        (item) => item.categoryName === category,
+        (item) => item.categoryName === category
       );
       const addedData = categoryData.map((item) => item.totalAdded);
       const removedData = categoryData.map((item) => item.totalRemoved);
@@ -174,19 +190,19 @@ const Dashboard = () => {
     const dates = [
       ...new Set(
         machineTypeErrorData.map((item) =>
-          new Date(item.requestDate).toLocaleDateString(),
-        ),
+          new Date(item.requestDate).toLocaleDateString()
+        )
       ),
     ];
 
     const updatedDatasets = machineTypes.map((machineType, index) => {
       const dataForMachineType = machineTypeErrorData.filter(
-        (item) => item.machineTypeName === machineType,
+        (item) => item.machineTypeName === machineType
       );
 
       const data = dates.map((date) => {
         const itemForDate = dataForMachineType.find(
-          (item) => new Date(item.requestDate).toLocaleDateString() === date,
+          (item) => new Date(item.requestDate).toLocaleDateString() === date
         );
         return itemForDate ? itemForDate.totalServiceRequests : 0;
       });
@@ -204,7 +220,7 @@ const Dashboard = () => {
     const labels = maintainCostData.map((item) => item.errorName);
     const data = maintainCostData.map((item) => item.totalMaintenanceCost);
     const backgroundColor = labels.map(
-      (_, index) => `hsl(${(index / labels.length) * 360}, 100%, 75%)`,
+      (_, index) => `hsl(${(index / labels.length) * 360}, 100%, 75%)`
     );
 
     setMaintainanceCostAnalyticState({
@@ -218,7 +234,7 @@ const Dashboard = () => {
     });
     setInventoryAnalyticState({
       labels: Array.from(
-        new Set(inventoryData.map((item) => item.Date.toString())),
+        new Set(inventoryData.map((item) => item.Date.toString()))
       ),
       datasets: datasets.flat(),
     });
@@ -252,7 +268,7 @@ const Dashboard = () => {
         data: 0,
       },
     ],
-    [],
+    []
   );
 
   const MachineData = useMemo(
@@ -268,7 +284,7 @@ const Dashboard = () => {
         data: 0,
       },
     ],
-    [],
+    []
   );
 
   useMemo(async () => {
@@ -316,7 +332,7 @@ const Dashboard = () => {
         const remapData = invData.map((item: IInventoryAnalysis) => {
           return {
             ...item,
-            Date: new Date(item.Date).toString(), // Convert the Date property to a Date object
+            Date: convertDateToString(new Date(item.Date)), // Convert the Date property to a Date object
           };
         });
         setInventoryData(remapData);
@@ -334,9 +350,9 @@ const Dashboard = () => {
             return {
               machineTypeName: item.machineTypeName,
               totalServiceRequests: item.totalServiceRequests,
-              requestDate: new Date(item.requestDate).toString(),
+              requestDate: convertDateToString(new Date(item.requestDate)),
             };
-          },
+          }
         );
         setMachineTypeErrorData(remapData);
       } catch (error) {
@@ -353,9 +369,9 @@ const Dashboard = () => {
             return {
               machineTypeName: item.machineTypeName,
               totalServiceRequests: item.totalServiceRequests,
-              requestDate: new Date(item.requestDate).toString(),
+              requestDate: new Date(item.requestDate),
             };
-          },
+          }
         );
         setMachineTypeErrorData(remapData);
       } catch (error) {
@@ -374,7 +390,7 @@ const Dashboard = () => {
               errorCount: item.errorCount,
               totalMaintenanceCost: item.totalMaintenanceCost,
             };
-          },
+          }
         );
         setMaintainCostData(remapData);
       } catch (error) {
@@ -444,8 +460,8 @@ const Dashboard = () => {
             </div>
             <div className="bg-white shadow-xl my-5 p-5 flex flex-col">
               <p className="text-center text-lg font-light my-4">
-                กราฟแสดงอัตราการเพิ่ม - ลดของอุปกรณ์คงคลังในแต่ละวัน
-                เทียบกับประเภทของอุปกรณ์
+                กราฟแสดงอัตราการเพิ่ม - ลดของอุปกรณ์คงคลังในแต่ละวัน - 
+                แยกตามประเภทอุปกรณ์
               </p>
               <div className="w-full">
                 <Line data={InventoryAnalyticState} options={chartOptions} />
@@ -462,10 +478,12 @@ const Dashboard = () => {
             </div>
 
             <div className="bg-white shadow-xl my-5 p-5 flex flex-col">
-              <p className="text-center text-lg font-light my-4"></p>
+              <p className="text-center text-lg font-light my-4 mb-[-20px]">
+                ตารางแสดงอันดับพนักงานที่มีส่วนร่วมในการซ่อมบำรุงเครื่องจักรสูงสุดและการใช้งานอุปกรณ์คงคลัง
+              </p>
               <div className="w-full">
                 <TableInfo
-                  title="ตารางแสดงผู้ทำการซ่อมและจำนวนอุปกรณ์ที่เบิก"
+                  title=""
                   dataSource={employeeEngagementData}
                   columns={TableColumns}
                   loading={loading}
@@ -474,9 +492,9 @@ const Dashboard = () => {
             </div>
 
             <div className="bg-white shadow-xl my-5 p-5 flex flex-col items-center">
-              <p className="text-center text-lg font-light my-4">
-                กราฟแสดงจำนวนคำร้องแจ้งซ่อมของเครื่องจักรในแต่ละวัน -
-                แยกตามประเภทของเครื่องจักร
+              <p className="text-center text-lg font-light my-4 py-4">
+                กราฟแสดงค่าใช้จ่ายในการซ่อมบำรุงเครื่องจักร -
+                แยกตามประเภทความเสียหาย
               </p>
               <div className="w-1/2">
                 <Pie
