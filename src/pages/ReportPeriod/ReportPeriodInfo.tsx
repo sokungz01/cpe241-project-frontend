@@ -1,7 +1,8 @@
-import { GetAllServiceRequest } from "@/api/servicerequest.api";
+import { GetAllMaintenanceLog } from "@/api/maintenancelog.api";
 import BreadcrumbComponent from "@/components/BreadcrumbComponent/BreadcrumbComponent";
 import TableInfo from "@/components/Info/TableInfo";
 import { IEmployee } from "@/interface/employee.interface";
+import { IMaintenanceLog } from "@/interface/maintenancelog.interface";
 import { ISerivceRequest } from "@/interface/servicerequest.interface";
 import { IBreadcrumb } from "@/interface/utils.interface";
 import { handleReportStatus } from "@/utils/reportStatus";
@@ -12,16 +13,16 @@ import { Link } from "react-router-dom";
 
 const ReportPeriodInfo = () => {
   const [loading, setLoading] = useState<boolean>(true);
-  const [serviceRequestData, setServiceRequestData] = useState<
-    ISerivceRequest[]
+  const [serviceMaintenanceLogData, setMaintenanceLogData] = useState<
+    IMaintenanceLog[]
   >([]);
 
-  const fetchServiceRequest = async () => {
+  const fetchMaintenanceLog = async () => {
     setLoading(true);
     try {
-      const result = await GetAllServiceRequest();
+      const result = await GetAllMaintenanceLog();
       console.log(result.data);
-      setServiceRequestData(result.data);
+      setMaintenanceLogData(result.data);
       setLoading(false);
     } catch (err) {
       setLoading(false);
@@ -30,7 +31,7 @@ const ReportPeriodInfo = () => {
   };
 
   useEffect(() => {
-    Promise.all([fetchServiceRequest()]);
+    Promise.all([fetchMaintenanceLog()]);
   }, []);
 
   const BreadCrumbLinks: IBreadcrumb[] = [
@@ -46,8 +47,8 @@ const ReportPeriodInfo = () => {
   const columns = [
     {
       title: "เลขที่รายงาน",
-      dataIndex: "serviceID",
-      key: "serviceID",
+      dataIndex: "maintenanceID",
+      key: "maintenanceID",
       render: (record: number) => {
         return record.toString().padStart(6, "0");
       },
@@ -55,12 +56,20 @@ const ReportPeriodInfo = () => {
     {
       title: "ชื่อเครื่องจักร",
       key: "machineName",
-      render: (row: ISerivceRequest) => {
+      render: (row: IMaintenanceLog) => {
         return row.machine.machineName;
       },
     },
     {
-      title: "สถานะการรายงาน",
+      title: "ระยะเวลาในการซ่อมประจำรอบ",
+      key: "machineName",
+      sorter: (a: IMaintenanceLog, b: IMaintenanceLog) => a.period - b.period,
+      render: (row: IMaintenanceLog) => {
+        return row.period + " เดือน";
+      },
+    },
+    {
+      title: "สถานะการของการซ่อม",
       key: "statusID",
       sorter: (a: ISerivceRequest, b: ISerivceRequest) =>
         a.statusID - b.statusID,
@@ -82,7 +91,7 @@ const ReportPeriodInfo = () => {
       },
     },
     {
-      title: "วันที่รายงานปัญหา",
+      title: "วันที่เริ่มซ่อมประจำรอบ",
       key: "createdDate",
       sorter: (a: ISerivceRequest, b: ISerivceRequest) =>
         new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime(),
@@ -103,8 +112,8 @@ const ReportPeriodInfo = () => {
     },
     {
       title: "ผู้รายงาน",
-      key: "user",
-      dataIndex: "user",
+      key: "staff",
+      dataIndex: "staff",
       render: (row: IEmployee) => {
         return (
           row.name.toLocaleUpperCase() +
@@ -118,11 +127,11 @@ const ReportPeriodInfo = () => {
       key: "action",
       width: 150,
       align: "center" as const,
-      render: (row: ISerivceRequest) => (
+      render: (row: IMaintenanceLog) => (
         <Space size="middle">
-          <Link to={`response/${row.serviceID}`}>
+          <Link to={`edit/${row.maintenanceID}`}>
             <Button className=" border-[#0174BE] text-[#0174BE] text-sm">
-              แจ้งรายงาน
+              รายละเอียด
             </Button>
           </Link>
         </Space>
@@ -144,7 +153,7 @@ const ReportPeriodInfo = () => {
         hrefBtn="create"
         titleBtn="เพิ่มรายงานประจำรอบ"
         columns={columns}
-        dataSource={serviceRequestData}
+        dataSource={serviceMaintenanceLogData}
         loading={loading}
       />
     </div>

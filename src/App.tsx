@@ -26,6 +26,7 @@ import CreateErrorTypePage from "./pages/ErrorType/CreateErrorTypePage";
 import ServiceRequest from "./pages/Report/ServiceRequest";
 import ServiceResponse from "./pages/Report/ServiceResponse";
 import ReportPeriodInfo from "./pages/ReportPeriod/ReportPeriodInfo";
+import CreateMaintenancePage from "./pages/ReportPeriod/CreateMaintenancePage";
 
 const NavbarAndSidebar = () => {
   return (
@@ -126,7 +127,11 @@ function App() {
                   </Route>
                   <Route path="report-period">
                     <Route index element={<ReportPeriodInfo />} />
-                    <Route path="create" element={<ServiceRequest />} />
+                    <Route path="create" element={<CreateMaintenancePage />} />
+                    <Route
+                      path="edit/:id"
+                      element={<CreateMaintenancePage isEdit />}
+                    />
                   </Route>
                   <Route path="dashboard" element={<Dashboard />} />
                 </Route>

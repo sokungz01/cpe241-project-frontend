@@ -1,3 +1,4 @@
+import { UpdateMaintenanceLogStatus } from "@/api/maintenancelog.api";
 import { UpdateServiceRequestStatus } from "@/api/servicerequest.api";
 import { Option } from "@/interface/utils.interface";
 import { handleReportStatus } from "@/utils/reportStatus";
@@ -13,6 +14,7 @@ const ReportStatusChangeModal = ({
   option,
   open,
   setOpen,
+  maintain,
 }: {
   serviceRequestID: number;
   option: Option[];
@@ -20,6 +22,7 @@ const ReportStatusChangeModal = ({
   statusID: number;
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  maintain?: boolean;
 }) => {
   const navigate = useNavigate();
   return (
@@ -72,19 +75,34 @@ const ReportStatusChangeModal = ({
               className="px-6 mx-2 bg-primary text-white"
               size="middle"
               onClick={async () => {
-                const result = await UpdateServiceRequestStatus(
-                  serviceRequestID,
-                  {
-                    statusID: Number(statusID),
-                  },
-                );
-                setOpen(false);
-                if (result.status !== 200) {
-                  SwalError("เกิดข้อผิดพลาด", "ไม่สามารถแก้ไขสถานะได้");
+                if (maintain) {
+                  const result = await UpdateMaintenanceLogStatus(
+                    serviceRequestID,
+                    { statusID: Number(statusID) },
+                  );
+                  setOpen(false);
+                  if (result.status !== 200) {
+                    SwalError("เกิดข้อผิดพลาด", "ไม่สามารถแก้ไขสถานะได้");
+                  } else {
+                    SwalSuccess("สำเร็จ", "เปลี่ยนสถานะเสร็จสิ้น").then(() => {
+                      navigate("../");
+                    });
+                  }
                 } else {
-                  SwalSuccess("สำเร็จ", "เปลี่ยนสถานะเสร็จสิ้น").then(() => {
-                    navigate("../");
-                  });
+                  const result = await UpdateServiceRequestStatus(
+                    serviceRequestID,
+                    {
+                      statusID: Number(statusID),
+                    },
+                  );
+                  setOpen(false);
+                  if (result.status !== 200) {
+                    SwalError("เกิดข้อผิดพลาด", "ไม่สามารถแก้ไขสถานะได้");
+                  } else {
+                    SwalSuccess("สำเร็จ", "เปลี่ยนสถานะเสร็จสิ้น").then(() => {
+                      navigate("../");
+                    });
+                  }
                 }
               }}
             >

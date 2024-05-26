@@ -10,11 +10,13 @@ const ReportStatusBar = ({
   status,
   userID,
   isResponse,
+  maintain,
 }: {
   serviceRequestID: number;
   status: number;
   userID: number;
-  isResponse: boolean;
+  isResponse?: boolean;
+  maintain?: boolean;
 }) => {
   const Auth = useContext(AuthContext);
   const [statusID, setStatusID] = useState<number>(0);
@@ -26,6 +28,8 @@ const ReportStatusBar = ({
     { value: "5", label: "ปฏิเสธคำร้อง" },
     { value: "6", label: "ไม่สามารถซ่อมได้" },
   ];
+
+  const maintainOptions: Option[] = [{ value: "3", label: "ซ่อมสำเร็จ" }];
 
   return (
     <div className="flex flex-col md:flex-row px-6 gap-4 mt-6">
@@ -54,7 +58,7 @@ const ReportStatusBar = ({
               disabled={disableByStatus.includes(status)}
               size="middle"
               className=" border-primary text-primary h-10 w-1/3"
-              options={closeCaseOptions}
+              options={maintain ? maintainOptions : closeCaseOptions}
               onChange={(e: number) => {
                 setStatusID(e);
                 setOpen(true);
@@ -67,10 +71,11 @@ const ReportStatusBar = ({
       <ReportStatusChangeModal
         serviceRequestID={serviceRequestID}
         oldStatusID={status}
-        option={closeCaseOptions}
+        option={maintain ? maintainOptions : closeCaseOptions}
         statusID={statusID}
         setOpen={setOpen}
         open={open}
+        maintain
       />
     </div>
   );
